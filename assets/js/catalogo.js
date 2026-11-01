@@ -129,7 +129,10 @@
   /* Eventos */
   form.addEventListener('submit', function (e) { e.preventDefault(); cargar(true); });
 
-  form.addEventListener('change', function (e) {
+  // Se escucha en document: el buscador y "Ordenar" están fuera del <form> (atributo form="filtros")
+  // y su evento change no llega al formulario.
+  document.addEventListener('change', function (e) {
+    if (!e.target.form || e.target.form !== form) return;
     if (e.target === selMarca) { cargarModelos(selMarca.value).then(function () { cargar(true); }); return; }
     if (e.target.matches('input[type=number], input[type=search]')) return;
     cargar(true);
