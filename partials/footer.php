@@ -43,7 +43,7 @@ $redes = array_filter([
 
 <?php if (wa_numero() && empty($ocultar_wa_flotante)): ?>
 <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener"
-   class="fixed bottom-5 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 hover:scale-105 transition" aria-label="WhatsApp">
+   class="wa-flotante fixed bottom-5 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 hover:scale-105 transition" aria-label="WhatsApp">
   <?= icon('message', 'w-6 h-6') ?>
 </a>
 <?php endif; ?>
@@ -51,7 +51,18 @@ $redes = array_filter([
 <script>
   (function () {
     var b = document.getElementById('btn-menu'), m = document.getElementById('menu-movil');
-    if (b && m) b.addEventListener('click', function () { m.classList.toggle('hidden'); });
+    if (!b || !m) return;
+    function poner(abrir) {
+      m.classList.toggle('abierto', abrir); b.classList.toggle('abierto', abrir);
+      b.setAttribute('aria-expanded', abrir); m.setAttribute('aria-hidden', !abrir);
+      b.setAttribute('aria-label', abrir ? 'Cerrar menú' : 'Abrir menú');
+      document.documentElement.style.overflow = abrir ? 'hidden' : '';
+      document.documentElement.classList.toggle('menu-abierto', abrir);
+    }
+    b.addEventListener('click', function () { poner(!m.classList.contains('abierto')); });
+    m.querySelectorAll('[data-cierra-menu]').forEach(function (a) { a.addEventListener('click', function () { poner(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') poner(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 768) poner(false); });
   })();
 </script>
 <?= $script_config ?? '' ?>

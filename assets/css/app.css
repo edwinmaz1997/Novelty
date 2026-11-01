@@ -80,3 +80,23 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
 @media (prefers-reduced-motion: reduce) {
   .hero-kenburns, .hero-brillo, .hero-entrada { animation: none !important; }
 }
+
+/* Menú móvil */
+.hamburguesa span { position: absolute; left: 50%; width: 20px; height: 2px; border-radius: 2px; background: currentColor; transform: translateX(-50%); transition: transform .35s cubic-bezier(.7,0,.3,1), opacity .2s, width .3s; }
+.hamburguesa span:nth-child(1) { top: 13px; }
+.hamburguesa span:nth-child(2) { top: 19px; width: 14px; margin-left: 3px; }
+.hamburguesa span:nth-child(3) { top: 25px; }
+.hamburguesa.abierto span:nth-child(1) { transform: translateX(-50%) translateY(6px) rotate(45deg); }
+.hamburguesa.abierto span:nth-child(2) { opacity: 0; transform: translateX(-50%) scaleX(0); }
+.hamburguesa.abierto span:nth-child(3) { transform: translateX(-50%) translateY(-6px) rotate(-45deg); }
+
+.menu-movil { position: fixed; left: 0; right: 0; top: 4rem; height: calc(100dvh - 4rem); z-index: 45; background: #fff;
+  clip-path: inset(0 0 100% 0); visibility: hidden; transition: clip-path .5s cubic-bezier(.7,0,.2,1), visibility 0s .5s; overflow-y: auto; }
+.menu-movil::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(40rem 20rem at 110% 110%, rgb(var(--brand-500) / .10), transparent 60%); }
+.menu-movil.abierto { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path .55s cubic-bezier(.7,0,.2,1), visibility 0s; }
+.menu-movil .menu-item { opacity: 0; transform: translate3d(0, 18px, 0); transition: opacity .25s, transform .25s; }
+.menu-movil.abierto .menu-item { opacity: 1; transform: none; transition: opacity .5s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1); transition-delay: calc(.18s + var(--i) * .06s); }
+@media (prefers-reduced-motion: reduce) { .menu-movil, .menu-movil .menu-item { transition: none !important; } }
+.wa-flotante { transition: opacity .25s, transform .25s; }
+.menu-abierto .wa-flotante { opacity: 0; transform: scale(.8); pointer-events: none; }

@@ -215,13 +215,12 @@ $scripts = ['https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js'];
 $script_inline = <<<HTML
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // Parallax del hero: la imagen se desplaza con el scroll y sigue un poco al mouse
+  // Hero: la imagen sigue levemente al mouse (sin moverse con el scroll)
   var hero = document.getElementById('hero'), capa = document.querySelector('.hero-parallax');
   if (hero && capa && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var sy = 0, mx = 0, my = 0, tick = false;
-    function pintar() { capa.style.transform = 'translate3d(' + mx + 'px,' + (sy * 0.28 + my) + 'px,0)'; tick = false; }
+    var mx = 0, my = 0, tick = false;
+    function pintar() { capa.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)'; tick = false; }
     function pedir() { if (!tick) { tick = true; requestAnimationFrame(pintar); } }
-    window.addEventListener('scroll', function () { sy = Math.min(window.scrollY, hero.offsetHeight); pedir(); }, { passive: true });
     if (window.matchMedia('(pointer: fine)').matches) {
       hero.addEventListener('mousemove', function (e) {
         var r = hero.getBoundingClientRect();
