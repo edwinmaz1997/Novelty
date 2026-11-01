@@ -107,7 +107,7 @@ $redes = array_filter([
     b.addEventListener('click', function () { poner(!m.classList.contains('abierto')); });
     m.querySelectorAll('[data-cierra-menu]').forEach(function (a) { a.addEventListener('click', function () { poner(false); }); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') poner(false); });
-    window.addEventListener('resize', function () { if (window.innerWidth >= 768) poner(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 1024) poner(false); });
   })();
 </script>
 <?= $script_config ?? '' ?>

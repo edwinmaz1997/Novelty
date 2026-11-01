@@ -11,6 +11,25 @@ const VEH_SELECT = "SELECT v.*, ma.nombre AS marca, ma.slug AS marca_slug, mo.no
 
 const ESTADOS_PUBLICOS = "('disponible','reservado')";
 
+/** Precio que paga el cliente: la oferta si existe, si no el publicado. */
+const PRECIO_SQL = '(CASE WHEN v.precio_oferta > 0 AND v.precio_oferta < v.precio_publicado THEN v.precio_oferta ELSE v.precio_publicado END)';
+const OFERTA_SQL = '(v.precio_oferta > 0 AND v.precio_oferta < v.precio_publicado)';
+
+function tiene_oferta(array $v): bool
+{
+    return !empty($v['precio_oferta']) && (float)$v['precio_oferta'] > 0 && (float)$v['precio_oferta'] < (float)$v['precio_publicado'];
+}
+
+function precio_actual(array $v): float
+{
+    return tiene_oferta($v) ? (float)$v['precio_oferta'] : (float)$v['precio_publicado'];
+}
+
+function descuento_pct(array $v): int
+{
+    return tiene_oferta($v) ? (int)round((1 - (float)$v['precio_oferta'] / (float)$v['precio_publicado']) * 100) : 0;
+}
+
 const STOPWORDS = ['de', 'del', 'el', 'la', 'los', 'las', 'en', 'y', 'con', 'color', 'un', 'una', 'auto', 'autos',
     'carro', 'carros', 'vehiculo', 'vehiculos', 'para', 'por', 'q'];
 
@@ -32,6 +51,7 @@ function vehiculos_filtros(array $s): array
     $ti = $s['tipo_ingreso'] ?? '';
     $f['tipo_ingreso'] = (is_string($ti) && isset(TIPOS_INGRESO[$ti])) ? $ti : '';
     $f['sin_fotos'] = !empty($s['sin_fotos']);
+    $f['oferta'] = !empty($s['oferta']) && $s['oferta'] !== '0';
     return $f;
 }
 
@@ -99,8 +119,8 @@ function vehiculos_where(array $f, bool $publico): array
         'anio_max'   => 'v.anio <= ?',
         'km_min'     => 'v.kilometraje >= ?',
         'km_max'     => 'v.kilometraje <= ?',
-        'precio_min' => 'v.precio_publicado >= ?',
-        'precio_max' => 'v.precio_publicado <= ?',
+        'precio_min' => PRECIO_SQL . ' >= ?',
+        'precio_max' => PRECIO_SQL . ' <= ?',
     ];
     foreach ($map as $k => $sql) {
         if ($f[$k] !== null && $f[$k] !== 0) {
@@ -114,6 +134,9 @@ function vehiculos_where(array $f, bool $publico): array
     }
     if (!empty($f['destacado'])) {
         $w[] = 'v.destacado = 1';
+    }
+    if (!empty($f['oferta'])) {
+        $w[] = OFERTA_SQL;
     }
     foreach (tokens_busqueda($f['q']) as $t) {
         $r = raiz_token($t);
@@ -135,13 +158,15 @@ function orden_sql(string $o): string
         case 'recientes':
             return 'v.fecha_ingreso DESC, v.id DESC';
         case 'precio_asc':
-            return 'v.precio_publicado ASC, v.id DESC';
+            return PRECIO_SQL . ' ASC, v.id DESC';
         case 'precio_desc':
-            return 'v.precio_publicado DESC, v.id DESC';
+            return PRECIO_SQL . ' DESC, v.id DESC';
         case 'km_asc':
             return 'v.kilometraje ASC, v.id DESC';
         case 'anio_desc':
             return 'v.anio DESC, v.id DESC';
+        case 'descuento':
+            return OFERTA_SQL . ' DESC, (v.precio_publicado - ' . PRECIO_SQL . ') / v.precio_publicado DESC, v.id DESC';
         case 'dias_desc':
             return 'v.fecha_ingreso ASC, v.id ASC';
         default:
@@ -206,7 +231,7 @@ function dias_predio(array $v): int
 /** Ganancia real (vendido) o esperada (en predio). */
 function vehiculo_ganancia(array $v): ?float
 {
-    $precio = $v['estado'] === 'vendido' ? $v['precio_venta_final'] : $v['precio_publicado'];
+    $precio = $v['estado'] === 'vendido' ? $v['precio_venta_final'] : precio_actual($v);
     if ($precio === null) {
         return null;
     }
@@ -218,6 +243,9 @@ function vehiculo_texto_busqueda(array $v): string
 {
     $partes = [$v['marca'], $v['modelo'], $v['version'], $v['anio'], $v['color'], $v['codigo'], $v['motor'], $v['carroceria'], $v['traccion']];
     $partes[] = str_replace(',', ' ', (string)$v['etiquetas']);
+    if (tiene_oferta($v)) {
+        $partes[] = 'oferta ofertas descuento rebaja';
+    }
     $sin = [
         'agencia'    => 'agencia de agencia',
         'rodado'     => 'rodado importado',

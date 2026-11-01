@@ -116,9 +116,11 @@
     var res = document.getElementById('resumen');
     if (res) {
       var m = res.getAttribute('data-moneda'), com = parseFloat(res.getAttribute('data-comision')) || 0;
-      var ids = ['precio_publicado', 'precio_propietario', 'gastos'];
+      var ids = ['precio_publicado', 'precio_oferta', 'precio_propietario', 'gastos'];
       var calc = function () {
         var pr = numero(document.getElementById('precio_publicado').value) || 0;
+        var of = numero(document.getElementById('precio_oferta').value);
+        if (of && of < pr) pr = of;
         var po = numero(document.getElementById('precio_propietario').value);
         var ga = numero(document.getElementById('gastos').value) || 0;
         document.getElementById('r-precio').textContent = pr ? dinero(pr, m) : '—';
@@ -141,6 +143,17 @@
         });
       });
     }
+
+    // Indicador del descuento de la oferta
+    var pOf = document.getElementById('precio_oferta'), pPu = document.getElementById('precio_publicado'), info = document.getElementById('oferta-info');
+    function infoOferta() {
+      var a = numero(pPu.value), o = numero(pOf.value);
+      if (!o) { info.className = 'mt-1 block text-xs font-medium text-ink-400'; info.textContent = 'Si lo llenas, el sitio muestra el precio anterior tachado y el descuento.'; return; }
+      if (!a || o >= a) { info.className = 'mt-1 block text-xs font-bold text-red-600'; info.textContent = 'Debe ser menor al precio al cliente.'; return; }
+      info.className = 'mt-1 block text-xs font-bold text-emerald-700';
+      info.textContent = '−' + Math.round((1 - o / a) * 100) + '% · el cliente ahorra Q ' + fmt.format(a - o);
+    }
+    pOf.addEventListener('input', infoOferta); pPu.addEventListener('input', infoOferta); infoOferta();
 
     // Al enviar, quitar comas
     document.getElementById('form-vehiculo').addEventListener('submit', function () {

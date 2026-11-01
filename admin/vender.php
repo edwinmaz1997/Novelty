@@ -95,7 +95,7 @@ admin_inicio(($vendido ? 'Venta · ' : 'Registrar venta · ') . vehiculo_titulo(
         <?= csrf_field() ?>
         <div class="grid gap-4 sm:grid-cols-2">
           <label class="<?= C_LABEL ?>">Precio final de venta *
-            <input name="precio_venta_final" id="precio_venta_final" value="<?= e(number_format((float)(a_numero(p('precio_venta_final')) ?: $v['precio_publicado']), 0, '.', ',')) ?>" inputmode="decimal" data-numero required class="<?= C_INPUT ?> text-lg font-bold">
+            <input name="precio_venta_final" id="precio_venta_final" value="<?= e(number_format((float)(a_numero(p('precio_venta_final')) ?: precio_actual($v)), 0, '.', ',')) ?>" inputmode="decimal" data-numero required class="<?= C_INPUT ?> text-lg font-bold">
           </label>
           <label class="<?= C_LABEL ?>">Fecha de venta *
             <input type="date" name="fecha_venta" value="<?= e(p('fecha_venta', date('Y-m-d'))) ?>" min="<?= e($v['fecha_ingreso']) ?>" max="<?= date('Y-m-d') ?>" required class="<?= C_INPUT ?>">
@@ -126,6 +126,7 @@ admin_inicio(($vendido ? 'Venta · ' : 'Registrar venta · ') . vehiculo_titulo(
   <aside class="<?= C_CARD ?> h-fit p-6">
     <h3 class="font-bold">Resumen</h3>
     <dl class="mt-4 space-y-2.5 text-sm">
+      <?php if (tiene_oferta($v)): ?><div class="flex justify-between"><dt class="text-ink-500">Precio de oferta</dt><dd class="font-semibold text-red-600 tabular-nums"><?= money($v['precio_oferta']) ?></dd></div><?php endif; ?>
       <div class="flex justify-between"><dt class="text-ink-500">Precio publicado</dt><dd class="font-semibold tabular-nums"><?= money($v['precio_publicado']) ?></dd></div>
       <?php if ($vendido): ?><div class="flex justify-between"><dt class="text-ink-500">Precio final</dt><dd class="font-semibold tabular-nums"><?= money($v['precio_venta_final']) ?></dd></div><?php endif; ?>
       <div class="flex justify-between"><dt class="text-ink-500"><?= $v['tipo_ingreso'] === 'compra' ? 'Costo de compra' : 'Para el propietario' ?></dt><dd class="tabular-nums"><?= $v['precio_propietario'] !== null ? '− ' . money($v['precio_propietario']) : '<span class="text-amber-600">sin definir</span>' ?></dd></div>

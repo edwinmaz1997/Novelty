@@ -24,7 +24,7 @@
 
   var ETIQUETAS = {
     marca: 'Marca', modelo: 'Modelo', procedencia: 'Procedencia', anio_min: 'Desde', anio_max: 'Hasta',
-    km_min: 'Km desde', km_max: 'Km hasta', precio_min: 'Precio mín.', precio_max: 'Precio máx.', q: 'Búsqueda'
+    km_min: 'Km desde', km_max: 'Km hasta', precio_min: 'Precio mín.', precio_max: 'Precio máx.', q: 'Búsqueda', oferta: 'Solo'
   };
 
   function parametros() {
@@ -72,6 +72,7 @@
       if (o) return o.textContent.replace(/\s*\(\d+\)\s*$/, '');
     }
     if (nombre === 'procedencia') return valor === 'agencia' ? 'Agencia' : 'Rodado';
+    if (nombre === 'oferta') return 'ofertas';
     if (nombre.indexOf('precio') === 0) return 'Q ' + fmt.format(valor);
     if (nombre.indexOf('km') === 0) return fmt.format(valor) + ' km';
     return valor;
@@ -117,6 +118,7 @@
     Array.prototype.forEach.call(form.elements, function (el) {
       if (el.tagName === 'SELECT') el.value = el.id === 'orden' ? el.value : '';
       else if (el.type === 'radio') el.checked = el.value === '';
+      else if (el.type === 'checkbox') el.checked = false;
       else if (el.type !== 'button' && el.type !== 'submit') el.value = '';
     });
     q.value = '';
@@ -147,6 +149,7 @@
       var k = t.getAttribute('data-quitar');
       if (k === 'q') q.value = '';
       else if (k === 'procedencia') form.querySelector('input[name=procedencia][value=""]').checked = true;
+      else if (k === 'oferta') form.elements.oferta.checked = false;
       else if (form.elements[k]) form.elements[k].value = '';
       if (k === 'marca') { cargarModelos('').then(function () { cargar(true); }); return; }
       cargar(true); return;

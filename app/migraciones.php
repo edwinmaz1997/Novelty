@@ -3,7 +3,7 @@
  * Migraciones de base de datos. Se ejecutan solas al cargar cualquier página
  * cuando la versión guardada en ajustes.db_version es menor a DB_VERSION.
  */
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 const AJUSTES_V2 = [
     'color_principal'   => '#005A50',
@@ -55,6 +55,13 @@ function migrar(): void
     $pdo = db();
     if ($v < 2) {
         migrar_v2($pdo);
+    }
+    if ($v < 6) {
+        $cols = array_column(q_all('SHOW COLUMNS FROM vehiculos'), 'Field');
+        if (!in_array('precio_oferta', $cols, true)) {
+            $pdo->exec('ALTER TABLE vehiculos ADD precio_oferta DECIMAL(12,2) NULL AFTER precio_publicado, ADD INDEX idx_oferta (precio_oferta)');
+        }
+        q("INSERT IGNORE INTO ajustes (clave, valor) VALUES ('ofertas_titulo', 'Ofertas'), ('mostrar_ofertas', '1')");
     }
     if ($v < 5) {
         $pdo->exec("CREATE TABLE IF NOT EXISTS etiquetas (

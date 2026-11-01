@@ -5,7 +5,7 @@ $u = requiere_login();
 $admin = es_admin();
 
 $enPredio = "estado IN ('disponible','reservado','oculto')";
-$k = q_one("SELECT COUNT(*) total, COALESCE(SUM(precio_publicado),0) valor,
+$k = q_one("SELECT COUNT(*) total, COALESCE(SUM(CASE WHEN precio_oferta > 0 AND precio_oferta < precio_publicado THEN precio_oferta ELSE precio_publicado END),0) valor,
     COALESCE(AVG(DATEDIFF(CURDATE(), fecha_ingreso)),0) dias,
     SUM(estado = 'reservado') reservados, SUM(estado = 'oculto') ocultos
     FROM vehiculos WHERE $enPredio");

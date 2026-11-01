@@ -107,7 +107,14 @@ admin_inicio('Vehículos', 'vehiculos', [
               </a>
             </td>
             <td class="px-3 py-3 tabular-nums text-ink-600"><?= num($v['kilometraje']) ?></td>
-            <td class="px-3 py-3 text-right font-semibold tabular-nums"><?= money($v['estado'] === 'vendido' ? $v['precio_venta_final'] : $v['precio_publicado']) ?></td>
+            <td class="px-3 py-3 text-right font-semibold tabular-nums">
+              <?php if ($v['estado'] !== 'vendido' && tiene_oferta($v)): ?>
+                <span class="block text-xs font-medium text-ink-400 line-through"><?= money($v['precio_publicado']) ?></span>
+                <span class="text-red-600"><?= money($v['precio_oferta']) ?></span> <span class="rounded bg-red-50 px-1 text-[10px] font-bold text-red-700">-<?= descuento_pct($v) ?>%</span>
+              <?php else: ?>
+                <?= money($v['estado'] === 'vendido' ? $v['precio_venta_final'] : $v['precio_publicado']) ?>
+              <?php endif; ?>
+            </td>
             <?php if ($admin): ?>
               <td class="px-3 py-3 text-right tabular-nums text-ink-600"><?= $v['precio_propietario'] !== null ? money($v['precio_propietario']) : '<span class="text-amber-600" title="Falta precio del propietario">' . icon('alert', 'w-4 h-4 inline') . '</span>' ?></td>
               <td class="px-3 py-3 text-right font-semibold tabular-nums <?= $g !== null && $g < 0 ? 'text-red-600' : 'text-emerald-700' ?>"><?= $v['precio_propietario'] !== null ? money($g) : '—' ?></td>

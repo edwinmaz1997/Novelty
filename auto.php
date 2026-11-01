@@ -28,11 +28,11 @@ if (empty($_SESSION['visto'][$id])) {
 
 $fotos = vehiculo_fotos($id);
 $similares = q_all(VEH_SELECT . ' WHERE v.estado IN ' . ESTADOS_PUBLICOS . ' AND v.id <> ? AND (v.marca_id = ? OR v.carroceria = ?)
-    ORDER BY (v.marca_id = ?) DESC, ABS(v.precio_publicado - ?) ASC LIMIT 4', [$id, $v['marca_id'], (string)$v['carroceria'], $v['marca_id'], $v['precio_publicado']]);
+    ORDER BY (v.marca_id = ?) DESC, ABS(' . PRECIO_SQL . ' - ?) ASC LIMIT 4', [$id, $v['marca_id'], (string)$v['carroceria'], $v['marca_id'], precio_actual($v)]);
 
 $nombre    = vehiculo_titulo($v);
-$titulo    = $nombre . ' ' . $v['anio'] . ' · ' . money($v['precio_publicado']) . ' · ' . negocio();
-$descripcion = $nombre . ' ' . ($v['version'] ?: '') . ' ' . $v['anio'] . ', ' . km($v['kilometraje']) . ', ' . (PROCEDENCIAS[$v['procedencia']] ?? '') . '. ' . money($v['precio_publicado']) . '.';
+$titulo    = $nombre . ' ' . $v['anio'] . ' · ' . money(precio_actual($v)) . (tiene_oferta($v) ? ' (oferta)' : '') . ' · ' . negocio();
+$descripcion = $nombre . ' ' . ($v['version'] ?: '') . ' ' . $v['anio'] . ', ' . km($v['kilometraje']) . ', ' . (PROCEDENCIAS[$v['procedencia']] ?? '') . '. ' . money(precio_actual($v)) . (tiene_oferta($v) ? ' (antes ' . money($v['precio_publicado']) . ')' : '') . '.';
 $og_imagen = $fotos ? abs_url('uploads/vehiculos/' . $fotos[0]['archivo']) : null;
 $nav_activo = 'vehiculos';
 $usa_swiper = true;
@@ -149,8 +149,18 @@ $msg = vehiculo_wa_mensaje($v);
             <?php if ($v['transmision']): ?><span class="inline-flex items-center gap-1.5 rounded-lg bg-ink-50 px-2.5 py-1.5 font-semibold text-ink-700"><?= icon('gear', 'w-4 h-4 text-ink-400') ?><?= e(TRANSMISIONES[$v['transmision']]) ?></span><?php endif; ?>
           </div>
           <div class="mt-6 border-t border-ink-100 pt-5">
-            <p class="text-xs font-semibold uppercase tracking-wider text-ink-400">Precio</p>
-            <p class="mt-1 text-4xl font-extrabold tracking-tight tabular-nums"><?= money($v['precio_publicado']) ?></p>
+            <?php if (tiene_oferta($v)): ?>
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-semibold uppercase tracking-wider text-red-600">Precio de oferta</p>
+                <span class="rounded-md bg-red-600 px-2 py-0.5 text-xs font-bold text-white">-<?= descuento_pct($v) ?>%</span>
+              </div>
+              <p class="mt-2 text-base font-semibold text-ink-400 line-through decoration-red-500/70 tabular-nums">Antes <?= money($v['precio_publicado']) ?></p>
+              <p class="text-4xl font-extrabold tracking-tight text-red-600 tabular-nums"><?= money($v['precio_oferta']) ?></p>
+              <p class="mt-2 inline-flex rounded-lg bg-red-50 px-2.5 py-1 text-sm font-bold text-red-700">Ahorras <?= money((float)$v['precio_publicado'] - (float)$v['precio_oferta']) ?></p>
+            <?php else: ?>
+              <p class="text-xs font-semibold uppercase tracking-wider text-ink-400">Precio</p>
+              <p class="mt-1 text-4xl font-extrabold tracking-tight tabular-nums"><?= money($v['precio_publicado']) ?></p>
+            <?php endif; ?>
             <p class="mt-1 text-sm text-ink-500">Pregunta por nuestras facilidades de pago.</p>
           </div>
           <div class="mt-6 grid gap-2">
@@ -190,7 +200,11 @@ $msg = vehiculo_wa_mensaje($v);
   <div class="flex items-center gap-3">
     <div class="min-w-0 flex-1">
       <p class="truncate text-xs font-medium text-ink-500"><?= e($nombre . ' ' . $v['anio']) ?></p>
-      <p class="text-xl font-extrabold tabular-nums"><?= money($v['precio_publicado']) ?></p>
+      <?php if (tiene_oferta($v)): ?>
+        <p class="flex items-baseline gap-2"><span class="text-xl font-extrabold text-red-600 tabular-nums"><?= money($v['precio_oferta']) ?></span><span class="text-xs font-semibold text-ink-400 line-through tabular-nums"><?= money($v['precio_publicado']) ?></span></p>
+      <?php else: ?>
+        <p class="text-xl font-extrabold tabular-nums"><?= money($v['precio_publicado']) ?></p>
+      <?php endif; ?>
     </div>
     <a href="<?= e(tel_link()) ?>" class="grid h-12 w-12 place-items-center rounded-xl border border-ink-200 text-ink-800" aria-label="Llamar"><?= icon('phone') ?></a>
     <?php if (wa_numero()): ?><a href="<?= e(wa_link($msg)) ?>" target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2 rounded-xl bg-[#25D366] px-5 font-bold text-white"><?= icon('whatsapp') ?>WhatsApp</a><?php endif; ?>

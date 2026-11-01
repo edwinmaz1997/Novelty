@@ -9,8 +9,8 @@ $anios   = facetas_anios();
 $procs   = facetas_procedencia();
 $kms     = [10000, 25000, 50000, 75000, 100000, 150000, 200000];
 
-$titulo     = 'Vehículos disponibles · ' . negocio();
-$nav_activo = 'vehiculos';
+$titulo     = ($f['oferta'] ? 'Ofertas' : 'Vehículos disponibles') . ' · ' . negocio();
+$nav_activo = $f['oferta'] ? 'ofertas' : 'vehiculos';
 $body_class = 'bg-ink-50/60';
 include __DIR__ . '/partials/head.php';
 include __DIR__ . '/partials/header.php';
@@ -41,6 +41,11 @@ $campo = 'h-11 w-full rounded-xl border-ink-200 bg-white text-sm font-medium tex
       </div>
 
       <div class="flex-1 space-y-6 overflow-y-auto p-5 lg:overflow-visible lg:rounded-2xl lg:bg-white lg:p-5 lg:ring-1 lg:ring-ink-100">
+        <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl bg-red-50 px-4 py-3 ring-1 ring-red-100">
+          <span class="flex items-center gap-2 text-sm font-bold text-red-700"><?= icon('tag', 'w-4 h-4') ?>Solo ofertas</span>
+          <input type="checkbox" name="oferta" value="1" <?= $f['oferta'] ? 'checked' : '' ?> class="peer sr-only">
+          <span class="relative h-6 w-11 rounded-full bg-red-200 transition after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-red-600 peer-checked:after:translate-x-5"></span>
+        </label>
         <div>
           <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-ink-500" for="f-marca">Marca</label>
           <select id="f-marca" name="marca" class="select <?= $campo ?>">

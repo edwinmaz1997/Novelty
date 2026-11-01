@@ -7,6 +7,9 @@ $__u = vehiculo_url($v);
     <img src="<?= e(foto_url($v['portada'], 'sm')) ?>" alt="<?= e(vehiculo_titulo($v) . ' ' . $v['anio']) ?>" loading="lazy"
          class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]">
     <div class="absolute left-3 top-3 flex flex-wrap gap-1.5">
+      <?php if (tiene_oferta($v)): ?>
+        <span class="inline-flex items-center rounded-md bg-red-600 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm">-<?= descuento_pct($v) ?>%</span>
+      <?php endif; ?>
       <?= badge_procedencia($v['procedencia'], 'bg-white/95 backdrop-blur') ?>
       <?php if ($v['estado'] === 'reservado'): ?>
         <span class="inline-flex items-center rounded-md bg-amber-400 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-amber-950">Reservado</span>
@@ -29,7 +32,14 @@ $__u = vehiculo_url($v);
       <?php if ($v['combustible']): ?><span class="inline-flex items-center gap-1"><?= icon('fuel', 'w-4 h-4 text-ink-400') ?><?= e(COMBUSTIBLES[$v['combustible']]) ?></span><?php endif; ?>
     </div>
     <div class="mt-auto flex items-end justify-between pt-4">
-      <span class="text-[22px] font-extrabold tracking-tight text-ink-900 tabular-nums"><?= money($v['precio_publicado']) ?></span>
+      <?php if (tiene_oferta($v)): ?>
+        <span class="leading-tight">
+          <span class="block text-[13px] font-semibold text-ink-400 line-through decoration-red-500/70 tabular-nums"><?= money($v['precio_publicado']) ?></span>
+          <span class="block text-[22px] font-extrabold tracking-tight text-red-600 tabular-nums"><?= money($v['precio_oferta']) ?></span>
+        </span>
+      <?php else: ?>
+        <span class="text-[22px] font-extrabold tracking-tight text-ink-900 tabular-nums"><?= money($v['precio_publicado']) ?></span>
+      <?php endif; ?>
       <span class="grid h-9 w-9 place-items-center rounded-full bg-ink-50 text-ink-600 transition group-hover:bg-brand-500 group-hover:text-white"><?= icon('arrow-r', 'w-4 h-4') ?></span>
     </div>
   </div>

@@ -38,6 +38,10 @@ $secciones = [
         'marcas_titulo'    => ['Título', 'text', ''],
         'marcas_subtitulo' => ['Subtítulo', 'textarea', 'También se usa como descripción en el pie de página.'],
     ]],
+    'ofertas' => ['Ofertas', 'Los vehículos con precio de oferta salen en su propio carrusel en el inicio y en el menú "Ofertas".', [
+        'mostrar_ofertas' => ['Mostrar el carrusel de ofertas en el inicio', 'check', ''],
+        'ofertas_titulo'  => ['Título de la sección', 'text', ''],
+    ]],
     'negocio' => ['Ventas', '', [
         'moneda'       => ['Símbolo de moneda', 'text', 'Ej. Q o $'],
         'comision_pct' => ['Comisión de referencia (%)', 'number', 'Solo informativa en el formulario de vehículos.'],

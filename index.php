@@ -6,6 +6,7 @@ if (count($destacados) < 3) {
     $destacados = vehiculos_buscar(['orden' => 'relevantes'], true, 1, 10)['items'];
 }
 $recientes = vehiculos_buscar(['orden' => 'recientes'], true, 1, 12);
+$ofertas   = ajuste('mostrar_ofertas', '1') === '1' ? vehiculos_buscar(['oferta' => '1', 'orden' => 'descuento'], true, 1, 12) : ['items' => [], 'total' => 0];
 $total     = $recientes['total'];
 $marcas    = facetas_marcas();
 $logos     = ajuste('mostrar_marcas', '1') === '1'
@@ -206,6 +207,35 @@ if (!$atajos) {
   </div>
 </section>
 
+<!-- OFERTAS -->
+<?php if ($ofertas['items']): ?>
+<section id="ofertas" class="mx-auto mt-16 max-w-7xl scroll-mt-20 overflow-hidden px-4 sm:px-6">
+  <div class="rounded-3xl bg-gradient-to-br from-red-50 via-white to-white p-5 ring-1 ring-red-100 sm:p-8">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[.18em] text-red-600"><?= icon('tag', 'w-4 h-4') ?>Precios especiales</p>
+        <h2 class="mt-1.5 text-2xl font-extrabold tracking-tight sm:text-3xl"><?= e(ajuste('ofertas_titulo', 'Ofertas')) ?></h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="<?= url('autos.php?oferta=1&orden=descuento') ?>" class="mr-2 hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 hover:text-red-800">Ver todas (<?= (int)$ofertas['total'] ?>) <?= icon('arrow-r', 'w-4 h-4') ?></a>
+        <?php if (count($ofertas['items']) > 1): ?>
+        <button class="ofe-prev grid h-11 w-11 place-items-center rounded-full border border-red-200 bg-white text-ink-700 hover:bg-red-50" aria-label="Anterior"><?= icon('chev-l') ?></button>
+        <button class="ofe-next grid h-11 w-11 place-items-center rounded-full border border-red-200 bg-white text-ink-700 hover:bg-red-50" aria-label="Siguiente"><?= icon('chev-r') ?></button>
+        <?php endif; ?>
+      </div>
+    </div>
+    <div class="swiper ofertas mt-6 !overflow-visible sm:!overflow-hidden">
+      <div class="swiper-wrapper">
+        <?php foreach ($ofertas['items'] as $v): ?>
+          <div class="swiper-slide !h-auto"><?php include __DIR__ . '/partials/card.php'; ?></div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+    <a href="<?= url('autos.php?oferta=1&orden=descuento') ?>" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 sm:hidden">Ver todas las ofertas (<?= (int)$ofertas['total'] ?>) <?= icon('arrow-r', 'w-4 h-4') ?></a>
+  </div>
+</section>
+<?php endif; ?>
+
 <!-- SERVICIOS -->
 <section id="servicios" class="mx-auto max-w-7xl scroll-mt-20 px-4 pt-24 sm:px-6">
   <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-end">
@@ -267,6 +297,13 @@ document.addEventListener('DOMContentLoaded', function () {
       navigation: { nextEl: '.marcas-next', prevEl: '.marcas-prev' },
       pagination: { el: '.marcas-pag', clickable: true, bulletClass: 'marca-punto', bulletActiveClass: 'activo' },
       breakpoints: { 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }
+    });
+  }
+  if (document.querySelector('.ofertas')) {
+    new Swiper('.ofertas', {
+      slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
+      navigation: { nextEl: '.ofe-next', prevEl: '.ofe-prev' },
+      breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 24 } }
     });
   }
   if (document.querySelector('.recientes')) {

@@ -1,36 +1,41 @@
 <?php
 $nav_activo = $nav_activo ?? '';
+$hayOfertas = (int)q_val('SELECT COUNT(*) FROM vehiculos v WHERE v.estado IN ' . ESTADOS_PUBLICOS . ' AND ' . OFERTA_SQL) > 0;
 $links = [
     'inicio'    => ['Inicio', url(''), 'home'],
     'vehiculos' => ['Vehículos', url('autos.php'), 'car'],
+    'ofertas'   => ['Ofertas', url('autos.php?oferta=1&orden=descuento'), 'tag'],
     'servicios' => ['Servicios', url('#servicios'), 'handshake'],
     'marcas'    => ['Marcas', url('#marcas'), 'star'],
     'contacto'  => ['Contacto', url('#contacto'), 'phone'],
 ];
+if (!$hayOfertas) {
+    unset($links['ofertas']);
+}
 ?>
 <header class="sticky top-0 z-40 border-b border-ink-100/80 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
   <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6">
     <a href="<?= url('') ?>" class="flex shrink-0 items-center" aria-label="<?= e(negocio()) ?>">
       <?= logo_html('claro', 'h-[18px] min-[380px]:h-5 sm:h-6 lg:h-7 w-auto max-w-[56vw]') ?>
     </a>
-    <nav class="hidden md:flex items-center gap-1 text-[14px] font-medium">
+    <nav class="hidden lg:flex items-center gap-0.5 text-[14px] font-medium">
       <?php foreach ($links as $k => $l): ?>
         <a href="<?= e($l[1]) ?>" class="rounded-lg px-3 py-2 transition <?= $nav_activo === $k ? 'text-ink-900 bg-ink-50' : 'text-ink-500 hover:text-ink-900 hover:bg-ink-50' ?>"><?= e($l[0]) ?></a>
       <?php endforeach; ?>
     </nav>
     <div class="ml-auto flex items-center gap-2">
-      <a href="<?= url('autos.php') ?>" class="hidden sm:inline-flex md:hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-ink-700 hover:bg-ink-50"><?= icon('search', 'w-4 h-4') ?>Buscar</a>
+      <a href="<?= url('autos.php') ?>" class="hidden sm:inline-flex lg:hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-ink-700 hover:bg-ink-50"><?= icon('search', 'w-4 h-4') ?>Buscar</a>
       <?php if (wa_numero()): ?>
       <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-600 transition">
         <?= icon('whatsapp', 'w-4 h-4') ?><span class="hidden sm:inline">Escríbenos</span>
       </a>
       <?php endif; ?>
-      <button type="button" id="btn-menu" class="hamburguesa md:hidden relative grid h-10 w-10 place-items-center rounded-xl text-ink-800 hover:bg-ink-50" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil">
+      <button type="button" id="btn-menu" class="hamburguesa lg:hidden relative grid h-10 w-10 place-items-center rounded-xl text-ink-800 hover:bg-ink-50" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
-  <div id="menu-movil" class="menu-movil md:hidden" aria-hidden="true">
+  <div id="menu-movil" class="menu-movil lg:hidden" aria-hidden="true">
     <nav class="mx-auto flex h-full max-w-7xl flex-col px-5 pb-8 pt-6">
       <p class="menu-item text-[11px] font-bold uppercase tracking-[.2em] text-ink-400" style="--i:0">Menú</p>
       <ul class="mt-3 divide-y divide-ink-100">

@@ -16,6 +16,7 @@ const ORDENES = [
     'precio_desc' => 'Precio: mayor a menor',
     'km_asc'      => 'Menor kilometraje',
     'anio_desc'   => 'Año más reciente',
+    'descuento'   => 'Mayor descuento',
 ];
 const MESES = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 const MAX_FOTOS = 30;

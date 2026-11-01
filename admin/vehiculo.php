@@ -20,7 +20,7 @@ $errores = [];
 $d = $v ?: [
     'marca_id' => '', 'modelo_id' => '', 'version' => '', 'anio' => '', 'kilometraje' => '', 'procedencia' => 'rodado',
     'color' => '', 'transmision' => 'automatica', 'combustible' => 'gasolina', 'motor' => '', 'carroceria' => '', 'traccion' => '',
-    'puertas' => '', 'pasajeros' => '', 'descripcion' => '', 'etiquetas' => '', 'precio_publicado' => '', 'destacado' => 0,
+    'puertas' => '', 'pasajeros' => '', 'descripcion' => '', 'etiquetas' => '', 'precio_publicado' => '', 'precio_oferta' => '', 'destacado' => 0,
     'estado' => 'disponible', 'tipo_ingreso' => 'consignacion', 'propietario_id' => '', 'precio_propietario' => '', 'gastos' => '0',
     'fecha_ingreso' => date('Y-m-d'), 'notas_internas' => '',
 ];
@@ -49,6 +49,7 @@ if (es_post()) {
         'descripcion'      => p('descripcion'),
         'etiquetas'        => mb_substr(implode(', ', etiquetas_lista(p('etiquetas'))), 0, 255),
         'precio_publicado' => a_numero(p('precio_publicado')),
+        'precio_oferta'    => a_numero(p('precio_oferta')) ?: null,
         'destacado'        => p('destacado') === '1' ? 1 : 0,
     ];
     if (!$vendido) {
@@ -74,6 +75,9 @@ if (es_post()) {
     }
     if (!$in['precio_publicado'] || $in['precio_publicado'] <= 0 || $in['precio_publicado'] > 99999999) {
         $errores[] = 'Escribe un precio de venta al público válido.';
+    }
+    if ($in['precio_oferta'] !== null && $in['precio_publicado'] && $in['precio_oferta'] >= $in['precio_publicado']) {
+        $errores[] = 'El precio de oferta debe ser menor al precio normal (o déjalo vacío).';
     }
     if ($in['kilometraje'] < 0 || $in['kilometraje'] > 2000000) {
         $errores[] = 'Revisa el kilometraje.';
@@ -223,6 +227,10 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
         <label class="<?= C_LABEL ?>">Precio al cliente (<?= e(ajuste('moneda', 'Q')) ?>) *
           <input name="precio_publicado" id="precio_publicado" value="<?= e($fmt($d['precio_publicado'])) ?>" inputmode="decimal" data-numero required placeholder="150,000" class="<?= C_INPUT ?> text-base font-bold">
         </label>
+        <label class="<?= C_LABEL ?>">Precio de oferta <span class="font-normal text-ink-400">(opcional)</span>
+          <input name="precio_oferta" id="precio_oferta" value="<?= e($fmt($d['precio_oferta'])) ?>" inputmode="decimal" data-numero placeholder="Vacío = sin oferta" class="<?= C_INPUT ?> font-bold text-red-600 placeholder:font-normal">
+          <span id="oferta-info" class="mt-1 block text-xs font-medium text-ink-400">Si lo llenas, el sitio muestra el precio anterior tachado y el descuento.</span>
+        </label>
         <label class="<?= C_LABEL ?>">Estado
           <?php if ($vendido): ?>
             <div class="mt-1.5"><?= badge_estado('vendido') ?></div>
@@ -337,7 +345,7 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
         <div class="flex justify-between"><span>Precio al cliente</span><span id="r-precio" class="font-semibold text-white tabular-nums">—</span></div>
         <div class="mt-1 flex justify-between"><span>− Propietario</span><span id="r-prop" class="tabular-nums">—</span></div>
         <div class="mt-1 flex justify-between"><span>− Gastos</span><span id="r-gastos" class="tabular-nums">—</span></div>
-        <div class="mt-3 flex items-end justify-between border-t border-white/10 pt-3"><span class="font-semibold text-white"><?= $vendido ? 'Ganancia (según precio publicado)' : 'Ganancia esperada' ?></span><span id="r-ganancia" class="text-xl font-extrabold text-emerald-400 tabular-nums">—</span></div>
+        <div class="mt-3 flex items-end justify-between border-t border-white/10 pt-3"><span class="font-semibold text-white"><?= $vendido ? 'Ganancia (según precio actual)' : 'Ganancia esperada' ?></span><span id="r-ganancia" class="text-xl font-extrabold text-emerald-400 tabular-nums">—</span></div>
         <p id="r-margen" class="mt-1 text-right text-xs text-ink-400"></p>
         <p id="r-comision" class="mt-2 text-xs text-ink-500"></p>
       </div>
