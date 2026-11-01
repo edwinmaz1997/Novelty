@@ -27,19 +27,36 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
 ?>
 
 <!-- HERO -->
-<section class="relative overflow-hidden bg-brand-950 <?= $heroImg ? 'hero-img' : 'hero-grid' ?>"<?= $heroImg ? ' style="background-image:url(\'' . e($heroImg) . '\')"' : '' ?>>
-  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 pt-14 pb-20 sm:pt-24 sm:pb-32">
-    <div class="max-w-3xl">
-      <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
+<section id="hero" class="relative isolate overflow-hidden bg-brand-950 <?= $heroImg ? '' : 'hero-grid' ?>">
+  <?php if ($heroImg): ?>
+  <div class="hero-media pointer-events-none absolute inset-0 -z-10 overflow-hidden lg:left-[28%]" aria-hidden="true">
+    <div class="hero-parallax absolute inset-0">
+      <img src="<?= e($heroImg) ?>" alt="" class="hero-kenburns h-full w-full object-cover object-[62%_center]" fetchpriority="high">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-950/55 to-brand-950 lg:hidden"></div>
+    <div class="absolute inset-0 hidden bg-gradient-to-r from-brand-950 via-brand-950/40 to-transparent lg:block"></div>
+    <div class="absolute inset-x-0 bottom-0 hidden h-48 bg-gradient-to-t from-brand-950 to-transparent lg:block"></div>
+    <div class="absolute inset-x-0 top-0 hidden h-24 bg-gradient-to-b from-brand-950/70 to-transparent lg:block"></div>
+  </div>
+  <div class="hero-brillo pointer-events-none absolute -left-40 top-1/3 -z-10 h-[30rem] w-[30rem] rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
+  <?php endif; ?>
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-20 sm:pt-28 sm:pb-28 lg:pt-36 lg:pb-32">
+    <div class="max-w-xl hero-entrada">
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80 backdrop-blur">
         <span class="h-1.5 w-1.5 rounded-full bg-brand-300"></span><?= num($total) ?> vehículos disponibles hoy
       </span>
-      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-sm sm:text-6xl lg:text-7xl">
         <?= e(ajuste('hero_titulo', 'Una nueva')) ?><?php if (ajuste('hero_titulo_color')): ?><br><span class="text-brand-300"><?= e(ajuste('hero_titulo_color')) ?></span><?php endif; ?>
       </h1>
-      <?php if (ajuste('hero_subtitulo')): ?><p class="mt-5 max-w-xl text-base text-white/70 sm:text-lg"><?= e(ajuste('hero_subtitulo')) ?></p><?php endif; ?>
+      <?php if (ajuste('hero_subtitulo')): ?><p class="mt-5 max-w-md text-base text-white/75 sm:text-lg"><?= e(ajuste('hero_subtitulo')) ?></p><?php endif; ?>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="<?= url('autos.php') ?>" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-brand-950 hover:bg-brand-50 transition">Ver inventario <?= icon('arrow-r', 'w-4 h-4') ?></a>
+        <a href="#servicios" class="inline-flex items-center gap-2 rounded-xl border border-white/25 px-6 py-3.5 text-sm font-bold text-white backdrop-blur hover:border-white/60 transition">Vende tu carro</a>
+      </div>
     </div>
+    <div class="h-10 lg:h-24"></div>
 
-    <form action="<?= url('autos.php') ?>" method="get" class="mt-9 rounded-2xl bg-white p-2 shadow-2xl shadow-black/30 sm:p-2.5">
+    <form action="<?= url('autos.php') ?>" method="get" class="hero-entrada hero-entrada-2 rounded-2xl bg-white p-2 shadow-2xl shadow-black/30 sm:p-2.5">
       <div class="grid gap-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr_auto]">
         <label class="relative flex items-center">
           <span class="pointer-events-none absolute left-4 text-ink-400"><?= icon('search') ?></span>
@@ -190,6 +207,21 @@ $scripts = ['https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js'];
 $script_inline = <<<HTML
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Parallax del hero: la imagen se desplaza con el scroll y sigue un poco al mouse
+  var hero = document.getElementById('hero'), capa = document.querySelector('.hero-parallax');
+  if (hero && capa && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var sy = 0, mx = 0, my = 0, tick = false;
+    function pintar() { capa.style.transform = 'translate3d(' + mx + 'px,' + (sy * 0.28 + my) + 'px,0)'; tick = false; }
+    function pedir() { if (!tick) { tick = true; requestAnimationFrame(pintar); } }
+    window.addEventListener('scroll', function () { sy = Math.min(window.scrollY, hero.offsetHeight); pedir(); }, { passive: true });
+    if (window.matchMedia('(pointer: fine)').matches) {
+      hero.addEventListener('mousemove', function (e) {
+        var r = hero.getBoundingClientRect();
+        mx = ((e.clientX - r.left) / r.width - .5) * -18; my = ((e.clientY - r.top) / r.height - .5) * -12; pedir();
+      });
+      hero.addEventListener('mouseleave', function () { mx = 0; my = 0; pedir(); });
+    }
+  }
   if (document.querySelector('.marcas')) {
     var n = document.querySelectorAll('.marcas .swiper-slide').length;
     new Swiper('.marcas', {

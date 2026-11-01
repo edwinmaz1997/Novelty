@@ -21,7 +21,7 @@ $secciones = [
         'hero_titulo'       => ['Título (línea 1)', 'text', ''],
         'hero_titulo_color' => ['Título (línea 2, en color)', 'text', ''],
         'hero_subtitulo'    => ['Subtítulo', 'textarea', ''],
-        'hero_imagen'       => ['Imagen de fondo (opcional)', 'img', 'Foto horizontal (ej. el predio o un carro). Si no hay, se usa el fondo de color.', '', 'oscuro', 2200, 1400],
+        'hero_imagen'       => ['Imagen principal', 'img', 'Foto horizontal (1920×1080 ideal) con el carro al centro. Se muestra al lado del título con movimiento suave. Si la quitas, se usa el fondo de color.', 'assets/img/hero.jpg', 'oscuro', 2400, 1600],
         'eslogan'           => ['Eslogan', 'text', 'Aparece en el título de la pestaña y en buscadores.'],
     ]],
     'servicios' => ['Servicios', 'Los tres pasos que aparecen en la página de inicio.', [

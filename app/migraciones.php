@@ -3,7 +3,7 @@
  * Migraciones de base de datos. Se ejecutan solas al cargar cualquier página
  * cuando la versión guardada en ajustes.db_version es menor a DB_VERSION.
  */
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 const AJUSTES_V2 = [
     'color_principal'   => '#005A50',
@@ -14,7 +14,7 @@ const AJUSTES_V2 = [
     'hero_titulo'       => 'Una nueva',
     'hero_titulo_color' => 'experiencia.',
     'hero_subtitulo'    => 'Vehículos seminuevos de agencia e importados, con facilidades de pago. Escribe lo que buscas o filtra por marca y año.',
-    'hero_imagen'       => '',
+    'hero_imagen'       => 'assets/img/hero.jpg',
     'servicios_titulo'  => 'Te acompañamos en cada paso',
     'servicio1_titulo'  => 'Venta',
     'servicio1_texto'   => 'Apoyo en la venta de tu vehículo, toma de fotografías y vídeos para promocionarlo en nuestra página web y redes sociales.',
@@ -48,11 +48,24 @@ const MARCAS_LOGOS = [
 
 function migrar(): void
 {
-    if ((int)ajuste('db_version', '1') >= DB_VERSION) {
+    $v = (int)ajuste('db_version', '1');
+    if ($v >= DB_VERSION) {
         return;
     }
     $pdo = db();
+    if ($v < 2) {
+        migrar_v2($pdo);
+    }
+    if ($v < 3) {
+        // Imagen principal de la portada
+        q("UPDATE ajustes SET valor = 'assets/img/hero.jpg' WHERE clave = 'hero_imagen' AND (valor = '' OR valor IS NULL)");
+    }
+    q('INSERT INTO ajustes (clave, valor) VALUES (?, ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)', ['db_version', (string)DB_VERSION]);
+    ajustes(true);
+}
 
+function migrar_v2(PDO $pdo): void
+{
     // v2: logos de marcas, identidad visual y textos editables
     $cols = array_column(q_all('SHOW COLUMNS FROM marcas'), 'Field');
     if (!in_array('logo', $cols, true)) {
@@ -77,7 +90,4 @@ function migrar(): void
         $ins2->execute([$k, $par[1]]);
         $up->execute([$par[1], $k, $par[0]]);
     }
-
-    q('INSERT INTO ajustes (clave, valor) VALUES (?, ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)', ['db_version', (string)DB_VERSION]);
-    ajustes(true);
 }

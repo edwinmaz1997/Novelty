@@ -63,3 +63,20 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
 /* Puntos del carrusel de marcas */
 .marca-punto { display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background: rgb(255 255 255 / .25); cursor: pointer; transition: all .25s; }
 .marca-punto.activo { width: 22px; background: #fff; }
+
+/* Hero: movimiento de la imagen (Ken Burns) + parallax + entrada */
+.hero-parallax { transition: transform .5s cubic-bezier(.2,.7,.2,1); will-change: transform; inset: -6% -4% !important; }
+.hero-kenburns { transform-origin: 65% 60%; animation: kenburns 24s ease-in-out infinite alternate; will-change: transform; }
+@keyframes kenburns {
+  0%   { transform: scale(1.02) translate3d(0, 0, 0); }
+  50%  { transform: scale(1.10) translate3d(-1.5%, -1%, 0); }
+  100% { transform: scale(1.16) translate3d(-3%, 1%, 0); }
+}
+.hero-brillo { animation: brillo 14s ease-in-out infinite alternate; }
+@keyframes brillo { from { transform: translate3d(0, 0, 0) scale(1); opacity: .7; } to { transform: translate3d(8rem, -3rem, 0) scale(1.2); opacity: 1; } }
+.hero-entrada { animation: entrada .9s cubic-bezier(.2,.7,.2,1) both; }
+.hero-entrada-2 { animation-delay: .25s; }
+@keyframes entrada { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-kenburns, .hero-brillo, .hero-entrada { animation: none !important; }
+}
