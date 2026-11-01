@@ -36,23 +36,23 @@ $links = [
       <ul class="mt-3 divide-y divide-ink-100">
         <?php $i = 1; foreach ($links as $k => $l): ?>
           <li class="menu-item" style="--i:<?= $i++ ?>">
-            <a href="<?= e($l[1]) ?>" data-cierra-menu class="group flex items-center gap-4 py-4">
-              <span class="grid h-11 w-11 place-items-center rounded-2xl transition <?= $nav_activo === $k ? 'bg-brand-500 text-white' : 'bg-ink-50 text-brand-600 group-active:bg-brand-500 group-active:text-white' ?>"><?= icon($l[2], 'w-5 h-5') ?></span>
-              <span class="flex-1 text-2xl font-extrabold tracking-tight <?= $nav_activo === $k ? 'text-brand-600' : 'text-ink-900' ?>"><?= e($l[0]) ?></span>
-              <span class="text-ink-300 transition group-active:translate-x-1 group-active:text-brand-500"><?= icon('arrow-r', 'w-5 h-5') ?></span>
+            <a href="<?= e($l[1]) ?>" data-cierra-menu class="group flex items-center gap-3.5 py-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl transition <?= $nav_activo === $k ? 'bg-brand-500 text-white' : 'bg-ink-50 text-brand-600 group-active:bg-brand-500 group-active:text-white' ?>"><?= icon($l[2], 'w-[18px] h-[18px]') ?></span>
+              <span class="flex-1 text-[17px] font-bold <?= $nav_activo === $k ? 'text-brand-600' : 'text-ink-900' ?>"><?= e($l[0]) ?></span>
+              <span class="text-ink-300 transition group-active:translate-x-1 group-active:text-brand-500"><?= icon('arrow-r', 'w-4 h-4') ?></span>
             </a>
           </li>
         <?php endforeach; ?>
       </ul>
       <div class="menu-item mt-auto grid gap-2 pt-8" style="--i:<?= $i ?>">
         <?php if (wa_numero()): ?>
-          <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener" class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-[#25D366] font-bold text-white"><?= icon('whatsapp') ?>Escríbenos por WhatsApp</a>
+          <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener" class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] text-[15px] font-bold text-white"><?= icon('whatsapp') ?>Escríbenos por WhatsApp</a>
         <?php endif; ?>
         <?php if (ajuste('telefono')): ?>
-          <a href="<?= e(tel_link()) ?>" class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-ink-200 font-bold text-ink-800"><?= icon('phone', 'w-5 h-5') ?>Llamar · <?= e(ajuste('telefono')) ?></a>
+          <a href="<?= e(tel_link()) ?>" class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-ink-200 text-[15px] font-semibold text-ink-800"><?= icon('phone', 'w-5 h-5') ?>Llamar · <?= e(ajuste('telefono')) ?></a>
         <?php endif; ?>
         <?php if (ajuste('direccion')): ?>
-          <button type="button" data-abrir-mapa class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-ink-200 font-bold text-ink-800"><?= icon('pin', 'w-5 h-5') ?>Cómo llegar</button>
+          <button type="button" data-abrir-mapa class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-ink-200 text-[15px] font-semibold text-ink-800"><?= icon('pin', 'w-5 h-5') ?>Cómo llegar</button>
         <?php endif; ?>
         <?php if (ajuste('horario')): ?><p class="mt-2 px-4 text-center text-xs leading-relaxed text-ink-400"><?= e(ajuste('horario')) ?></p><?php endif; ?>
       </div>
