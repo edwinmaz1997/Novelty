@@ -124,3 +124,9 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
   background: rgb(var(--brand-300)); animation: parpadeo 1s steps(1) infinite; transition: opacity .6s; }
 .maquina-cursor.fin { opacity: 0; }
 @keyframes parpadeo { 50% { opacity: 0; } }
+
+/* Submenú del panel */
+.grupo-hijos { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+.grupo-hijos > div { overflow: hidden; }
+.grupo-menu.abierto .grupo-hijos { grid-template-rows: 1fr; }
+.grupo-menu.abierto .grupo-flecha { transform: rotate(180deg); }

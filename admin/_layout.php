@@ -5,14 +5,17 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
 {
     $u = usuario();
     $admin = es_admin();
+    // [clave, texto, ícono, url, visible, hijos]
     $menu = [
         ['dashboard', 'Inicio', 'home', 'admin/', true],
-        ['vehiculos', 'Vehículos', 'car', 'admin/vehiculos.php', true],
-        ['nuevo', 'Ingresar vehículo', 'plus', 'admin/vehiculo.php', true],
+        ['grupo-vehiculos', 'Vehículos', 'car', '', true, [
+            ['vehiculos', 'Ver vehículos', 'admin/vehiculos.php', true],
+            ['nuevo', 'Ingresar vehículo', 'admin/vehiculo.php', true],
+            ['catalogos', 'Marcas y modelos', 'admin/catalogos.php', $admin],
+            ['etiquetas', 'Etiquetas', 'admin/etiquetas.php', $admin],
+        ]],
         ['clientes', 'Clientes', 'users', 'admin/clientes.php', $admin],
         ['reportes', 'Reportes', 'chart', 'admin/reportes.php', $admin],
-        ['catalogos', 'Marcas y modelos', 'layers', 'admin/catalogos.php', $admin],
-        ['etiquetas', 'Etiquetas', 'tag', 'admin/etiquetas.php', $admin],
         ['usuarios', 'Usuarios', 'key', 'admin/usuarios.php', $admin],
         ['ajustes', 'Ajustes', 'settings', 'admin/ajustes.php', $admin],
     ];
@@ -35,10 +38,31 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
     <?= logo_html('oscuro', 'h-5 w-auto max-w-[170px]') ?>
   </a>
   <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-4 text-[14px] font-medium">
-    <?php foreach ($menu as $m): if (!$m[4]) continue; $on = $m[0] === $activo; ?>
-      <a href="<?= url($m[3]) ?>" class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition <?= $on ? 'bg-white/10 text-white' : 'hover:bg-white/5 hover:text-white' ?>">
-        <?= icon($m[2], 'w-[18px] h-[18px] ' . ($on ? 'text-brand-200' : 'text-brand-200/40')) ?><?= e($m[1]) ?>
-      </a>
+    <?php foreach ($menu as $m): if (!$m[4]) continue; ?>
+      <?php if (!empty($m[5])):
+        $hijos = array_filter($m[5], function ($h) { return $h[3]; });
+        $abierto = in_array($activo, array_column($hijos, 0), true); ?>
+        <div class="grupo-menu<?= $abierto ? ' abierto' : '' ?>">
+          <button type="button" class="grupo-btn flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition <?= $abierto ? 'text-white' : 'hover:bg-white/5 hover:text-white' ?>" aria-expanded="<?= $abierto ? 'true' : 'false' ?>">
+            <?= icon($m[2], 'w-[18px] h-[18px] ' . ($abierto ? 'text-brand-200' : 'text-brand-200/40')) ?><span class="flex-1 text-left"><?= e($m[1]) ?></span>
+            <?= icon('chev-d', 'grupo-flecha w-4 h-4 text-brand-200/50 transition-transform') ?>
+          </button>
+          <div class="grupo-hijos">
+            <div class="min-h-0"><div class="ml-[21px] mt-0.5 space-y-0.5 border-l border-white/10 pb-1 pl-3">
+              <?php foreach ($hijos as $h): $on = $h[0] === $activo; ?>
+                <a href="<?= url($h[2]) ?>" class="relative flex items-center rounded-lg px-3 py-2 text-[13.5px] transition <?= $on ? 'bg-white/10 font-semibold text-white' : 'hover:bg-white/5 hover:text-white' ?>">
+                  <?php if ($on): ?><span class="absolute -left-[13.5px] top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-brand-300"></span><?php endif; ?>
+                  <?= e($h[1]) ?>
+                </a>
+              <?php endforeach; ?>
+            </div></div>
+          </div>
+        </div>
+      <?php else: $on = $m[0] === $activo; ?>
+        <a href="<?= url($m[3]) ?>" class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition <?= $on ? 'bg-white/10 text-white' : 'hover:bg-white/5 hover:text-white' ?>">
+          <?= icon($m[2], 'w-[18px] h-[18px] ' . ($on ? 'text-brand-200' : 'text-brand-200/40')) ?><?= e($m[1]) ?>
+        </a>
+      <?php endif; ?>
     <?php endforeach; ?>
     <a href="<?= url('') ?>" target="_blank" class="mt-4 flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-white/5 hover:text-white"><?= icon('external', 'w-[18px] h-[18px] text-brand-200/40') ?>Ver sitio</a>
   </nav>
@@ -80,6 +104,12 @@ function admin_fin(array $scripts = [], string $inline = ''): void
     function t(o) { m.classList.toggle('-translate-x-full', !o); v.classList.toggle('hidden', !o); }
     document.getElementById('admin-abrir').addEventListener('click', function () { t(true); });
     v.addEventListener('click', function () { t(false); });
+    document.querySelectorAll('.grupo-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var g = b.closest('.grupo-menu'), ab = !g.classList.contains('abierto');
+        g.classList.toggle('abierto', ab); b.setAttribute('aria-expanded', ab);
+      });
+    });
     document.querySelectorAll('[data-confirmar]').forEach(function (f) {
       f.addEventListener('submit', function (e) { if (!confirm(f.getAttribute('data-confirmar'))) e.preventDefault(); });
     });
