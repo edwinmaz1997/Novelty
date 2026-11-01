@@ -57,6 +57,7 @@ if (!$atajos) {
           var h = document.getElementById('hero-titulo');
           if (!h || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
           h.classList.add('escribiendo');
+          document.documentElement.classList.add('hero-anim');
           var lineas = h.querySelectorAll('.maquina-texto'), cursor = document.createElement('span');
           cursor.className = 'maquina-cursor';
           var li = 0, ci = 0;
@@ -66,11 +67,67 @@ if (!$atajos) {
             if (ci < t.length) { setTimeout(paso, t[ci - 1] === ' ' ? 120 : 55 + Math.random() * 55); return; }
             if (++li < lineas.length) { ci = 0; setTimeout(paso, 380); return; }
             setTimeout(function () { cursor.classList.add('fin'); }, 3200);
+            if (window.heroLlegada) window.heroLlegada(); else window.heroListo = true;
           }
           setTimeout(paso, 450);
         })();
       </script>
-      <?php if (ajuste('hero_subtitulo')): ?><p class="mt-5 max-w-md text-base text-white/75 sm:text-lg"><?= e(ajuste('hero_subtitulo')) ?></p><?php endif; ?>
+      <?php if (ajuste('hero_subtitulo')): ?>
+      <div class="relative mt-5 max-w-md">
+        <div id="hero-humo" class="pointer-events-none absolute inset-0 z-0" aria-hidden="true"></div>
+        <p id="hero-sub" class="relative z-10 text-base text-white/75 sm:text-lg"><?= e(ajuste('hero_subtitulo')) ?></p>
+      </div>
+      <script>
+        /* El subtítulo entra "derrapando" y deja humo que se desvanece */
+        window.heroLlegada = function () {
+          var p = document.getElementById('hero-sub'), humo = document.getElementById('hero-humo');
+          if (!p || !p.animate) { if (p) p.style.opacity = 1; return; }
+          var dur = 1100, inicio = -Math.min(window.innerWidth * .4, 300), ancho = p.scrollWidth;
+          var anim = p.animate([
+            { transform: 'translateX(' + inicio + 'px) skewX(-16deg)', opacity: 0, filter: 'blur(4px)' },
+            { transform: 'translateX(' + (inicio * .3) + 'px) skewX(-12deg)', opacity: 1, filter: 'blur(1.5px)', offset: .45 },
+            { transform: 'translateX(10px) skewX(5deg)', opacity: 1, filter: 'blur(0)', offset: .8 },
+            { transform: 'translateX(0) skewX(0)', opacity: 1, filter: 'blur(0)' }
+          ], { duration: dur, easing: 'cubic-bezier(.22,.7,.25,1)', fill: 'forwards' });
+
+          var alto = p.offsetHeight, t0 = performance.now(), ultimo = 0;
+          function bocanada(x, op, abajo) {
+            var b = document.createElement('span'), tam = 40 + Math.random() * 70;
+            var y = alto * (abajo ? .7 + Math.random() * .5 : .25 + Math.random() * .85) - tam / 2;   // más humo abajo, "a ras de llanta"
+            b.className = 'humo';
+            b.style.width = b.style.height = tam + 'px';
+            b.style.left = (x - tam / 2) + 'px';
+            b.style.top = y + 'px';
+            humo.appendChild(b);
+            var dx = -(30 + Math.random() * 110), dy = -(25 + Math.random() * 60);
+            b.animate([
+              { transform: 'translate(0,0) scale(.4)', opacity: 0 },
+              { transform: 'translate(' + dx * .2 + 'px,' + dy * .15 + 'px) scale(1)', opacity: op, offset: .15 },
+              { transform: 'translate(' + dx * .6 + 'px,' + dy * .6 + 'px) scale(1.9)', opacity: op * .45, offset: .55 },
+              { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + (2.6 + Math.random() * 1.4) + ')', opacity: 0 }
+            ], { duration: 2000 + Math.random() * 1600, easing: 'cubic-bezier(.25,.6,.35,1)', fill: 'forwards' })
+              .onfinish = function () { b.remove(); };
+          }
+          (function cuadro(ahora) {
+            var t = ahora - t0;
+            var borde = new DOMMatrixReadOnly(getComputedStyle(p).transform).m41;   // borde izquierdo del texto
+            if (t < dur) {
+              if (ahora - ultimo > 28) {
+                ultimo = ahora;
+                var frenando = t > dur * .45;
+                bocanada(borde - Math.random() * 50, frenando ? .55 : .45);
+                // al frenar, las "llantas" sueltan humo a lo largo de todo el texto
+                if (frenando) bocanada(borde + Math.random() * ancho * .85, .45, true);
+              }
+              requestAnimationFrame(cuadro);
+            } else {
+              for (var k = 0; k < 9; k++) bocanada(Math.random() * ancho * .9 - 40, .4, true);   // nube final al frenar
+            }
+          })(t0);
+        };
+        if (window.heroListo) window.heroLlegada();
+      </script>
+      <?php endif; ?>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="<?= url('autos.php') ?>" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-brand-950 hover:bg-brand-50 transition">Ver inventario <?= icon('arrow-r', 'w-4 h-4') ?></a>
         <a href="#servicios" class="inline-flex items-center gap-2 rounded-xl border border-white/25 px-6 py-3.5 text-sm font-bold text-white backdrop-blur hover:border-white/60 transition">Vende tu carro</a>
