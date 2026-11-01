@@ -166,7 +166,6 @@ if (!$atajos) {
       </div>
       <div class="mt-8 flex items-center justify-center gap-3">
         <button class="marcas-prev grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80 hover:border-white/40 hover:text-white" aria-label="Anterior"><?= icon('chev-l') ?></button>
-        <div class="marcas-pag !static flex !w-auto items-center gap-1.5"></div>
         <button class="marcas-next grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80 hover:border-white/40 hover:text-white" aria-label="Siguiente"><?= icon('chev-r') ?></button>
       </div>
     </div>
@@ -289,36 +288,56 @@ document.addEventListener('DOMContentLoaded', function () {
       hero.addEventListener('mouseleave', function () { mx = 0; my = 0; pedir(); });
     }
   }
-  if (document.querySelector('.marcas')) {
-    var n = document.querySelectorAll('.marcas .swiper-slide').length;
-    new Swiper('.marcas', {
-      slidesPerView: 2.2, spaceBetween: 12, grabCursor: true, loop: n > 6, speed: 600,
-      autoplay: { delay: 2600, disableOnInteraction: false, pauseOnMouseEnter: true },
-      navigation: { nextEl: '.marcas-next', prevEl: '.marcas-prev' },
-      pagination: { el: '.marcas-pag', clickable: true, bulletClass: 'marca-punto', bulletActiveClass: 'activo' },
-      breakpoints: { 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }
-    });
+  // Carrusel infinito: al llegar al último, "siguiente" vuelve al primero.
+  // Swiper necesita suficientes tarjetas para el loop; si hay pocas se duplican (solo en pantalla).
+  var vehBp = { 640: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 24 } };
+  function porVista(base, bp) {
+    var v = base;
+    Object.keys(bp).forEach(function (w) { if (window.innerWidth >= +w) v = bp[w].slidesPerView; });
+    return v;
   }
-  if (document.querySelector('.ofertas')) {
-    new Swiper('.ofertas', {
-      slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
-      navigation: { nextEl: '.ofe-next', prevEl: '.ofe-prev' },
-      breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 24 } }
-    });
+  function carrusel(sel, opc) {
+    var el = document.querySelector(sel);
+    if (!el) return null;
+    var wrap = el.querySelector('.swiper-wrapper'), originales = Array.prototype.slice.call(wrap.children);
+    var n = originales.length, vista = Math.ceil(porVista(opc.slidesPerView, opc.breakpoints || {}));
+    var minimo = Math.max(vista * 2 + 2, 6);
+    opc.loop = n > 1 && n > Math.floor(porVista(opc.slidesPerView, opc.breakpoints || {}));
+    if (opc.loop) {
+      // Se duplican juegos completos para no repetir dos tarjetas seguidas
+      while (wrap.children.length < minimo) {
+        originales.forEach(function (o) {
+          var c = o.cloneNode(true);
+          c.setAttribute('aria-hidden', 'true');
+          c.querySelectorAll('a').forEach(function (a) { a.setAttribute('tabindex', '-1'); });
+          wrap.appendChild(c);
+        });
+      }
+    } else if (opc.navigation) {
+      [opc.navigation.nextEl, opc.navigation.prevEl].forEach(function (s) { document.querySelectorAll(s).forEach(function (b) { b.classList.add('hidden'); }); });
+    }
+    return new Swiper(el, opc);
   }
-  if (document.querySelector('.recientes')) {
-    new Swiper('.recientes', {
-      slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
-      navigation: { nextEl: '.rec-next', prevEl: '.rec-prev' },
-      breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 24 } }
-    });
-  }
-  if (!document.querySelector('.destacados')) return;
-  new Swiper('.destacados', {
+
+  carrusel('.marcas', {
+    slidesPerView: 2.2, spaceBetween: 12, grabCursor: true, speed: 600,
+    autoplay: { delay: 2600, disableOnInteraction: false, pauseOnMouseEnter: true },
+    navigation: { nextEl: '.marcas-next', prevEl: '.marcas-prev' },
+    breakpoints: { 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }
+  });
+  carrusel('.destacados', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
     navigation: { nextEl: '.dest-next', prevEl: '.dest-prev' },
     autoplay: { delay: 5000, disableOnInteraction: true, pauseOnMouseEnter: true },
-    breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 24 } }
+    breakpoints: JSON.parse(JSON.stringify(vehBp))
+  });
+  carrusel('.ofertas', {
+    slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
+    navigation: { nextEl: '.ofe-next', prevEl: '.ofe-prev' }, breakpoints: JSON.parse(JSON.stringify(vehBp))
+  });
+  carrusel('.recientes', {
+    slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
+    navigation: { nextEl: '.rec-next', prevEl: '.rec-prev' }, breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
 });
 </script>
