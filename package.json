@@ -1,0 +1,12 @@
+{
+  "name": "novelty",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/css/tw-input.css -o ./assets/css/tw.css --minify",
+    "watch:css": "tailwindcss -i ./assets/css/tw-input.css -o ./assets/css/tw.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "tailwindcss": "^3.4.17"
+  }
+}

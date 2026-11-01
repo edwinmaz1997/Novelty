@@ -1,0 +1,45 @@
+html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+body { font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+[x-cloak], [hidden] { display: none !important; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* Patrón del hero */
+.hero-grid {
+  background-image:
+    radial-gradient(60rem 30rem at 85% -10%, rgba(242, 92, 5, .28), transparent 60%),
+    radial-gradient(40rem 25rem at 0% 110%, rgba(56, 120, 255, .18), transparent 60%),
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: auto, auto, 44px 44px, 44px 44px;
+}
+
+/* Selects con flecha propia */
+.select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237D8CA3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .7rem center; background-size: 1rem; padding-right: 2.2rem !important;
+}
+
+/* Swiper */
+.swiper-button-disabled { opacity: .35; pointer-events: none; }
+.thumbs .swiper-slide { opacity: .5; transition: opacity .2s; cursor: pointer; }
+.thumbs .swiper-slide-thumb-active { opacity: 1; outline: 2px solid #F25C05; outline-offset: -2px; }
+.swiper-zoom-container > img { max-height: 100vh; object-fit: contain; }
+
+/* Tarjeta cargando */
+.skeleton { background: linear-gradient(90deg, #E9EDF3 25%, #F5F7FA 37%, #E9EDF3 63%); background-size: 400% 100%; animation: sk 1.2s ease infinite; }
+@keyframes sk { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+.fade-in { animation: fi .35s ease both; }
+@keyframes fi { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Drawer de filtros (móvil) */
+@media (max-width: 1023px) {
+  #panel-filtros { position: fixed; inset: 0 auto 0 0; width: min(92vw, 380px); z-index: 60; transform: translateX(-105%); transition: transform .28s ease; }
+  #panel-filtros.abierto { transform: none; }
+}
+
+/* Admin: fotos ordenables */
+.sortable-ghost { opacity: .35; }
+.sortable-chosen { box-shadow: 0 10px 30px -10px rgba(11,18,32,.35); }

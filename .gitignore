@@ -1,7 +1,6 @@
-.env
-config/config.local.php
-uploads/*
-!uploads/.gitkeep
+app/config.local.php
+uploads/vehiculos/*
+!uploads/vehiculos/.gitkeep
 node_modules/
 .DS_Store
 *.log

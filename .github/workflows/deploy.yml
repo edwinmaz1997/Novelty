@@ -15,6 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compilar CSS (Tailwind)
+        run: |
+          npm install --no-audit --no-fund
+          npm run build:css
+
       - name: Subir por FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -31,5 +40,10 @@ jobs:
             **/.github/**
             **/node_modules/**
             README.md
+            package.json
+            package-lock.json
+            tailwind.config.js
+            assets/css/tw-input.css
+            uploads/vehiculos/**
+            app/config.local.php
             .env
-            **/*.sql
