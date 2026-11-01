@@ -56,9 +56,25 @@ function base_path(): string
     return $b;
 }
 
+/**
+ * URL limpia: url('autos.php?q=x') → /autos/?q=x · url('admin/index.php') → /admin/
+ * (el .htaccess traduce de vuelta al archivo .php)
+ */
 function url(string $p = ''): string
 {
-    return base_path() . '/' . ltrim($p, '/');
+    $p = ltrim($p, '/');
+    if (preg_match('#^([^?\#]*?)\.php((?:[?\#].*)?)$#', $p, $m)) {
+        $ruta = $m[1];
+        if ($ruta === 'index') {
+            $ruta = '';
+        } elseif (substr($ruta, -6) === '/index') {
+            $ruta = substr($ruta, 0, -5);
+        } else {
+            $ruta .= '/';
+        }
+        $p = $ruta . $m[2];
+    }
+    return base_path() . '/' . $p;
 }
 
 function abs_url(string $p = ''): string
