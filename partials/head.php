@@ -13,7 +13,7 @@ $og_imagen   = $og_imagen ?? null;
   <meta property="og:title" content="<?= e($titulo) ?>">
   <meta property="og:description" content="<?= e($descripcion) ?>">
   <?php if ($og_imagen): ?><meta property="og:image" content="<?= e($og_imagen) ?>"><?php endif; ?>
-  <meta name="theme-color" content="#0B1220">
+  <meta name="theme-color" content="<?= e(ajuste('color_principal', '#005A50')) ?>">
   <link rel="stylesheet" href="<?= asset('assets/css/tw.css') ?>">
   <?php if (!empty($usa_swiper)): ?>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">

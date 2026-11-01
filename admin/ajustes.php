@@ -99,6 +99,8 @@ if (es_post()) {
             $st->execute([$k, $val]);
         }
     }
+    ajustes(true);
+    iconos_actualizar_desde_ajustes();
     foreach ($errores as $er) {
         flash('error', $er);
     }

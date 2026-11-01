@@ -1,6 +1,9 @@
 Options -Indexes -MultiViews
 DirectoryIndex index.php
 
+AddType image/x-icon .ico
+AddType application/manifest+json .webmanifest
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -17,6 +20,12 @@ DirectoryIndex index.php
   RewriteCond %{REQUEST_METHOD} =GET
   RewriteCond %{THE_REQUEST} \s/+([^\s?]+?)\.php[\s?] [NC]
   RewriteRule ^ /%1/ [R=301,L,NE]
+
+  # Íconos: si en Ajustes se subió uno propio, se sirve el personalizado en la misma dirección
+  RewriteCond %{DOCUMENT_ROOT}/uploads/sitio/iconos/$1 -f
+  RewriteRule ^(favicon\.ico|favicon-32\.png|apple-touch-icon\.png|apple-touch-icon-precomposed\.png|icon-192\.png|icon-512\.png)$ uploads/sitio/iconos/$1 [L]
+  RewriteRule ^apple-touch-icon-precomposed\.png$ apple-touch-icon.png [L]
+  RewriteRule ^manifest\.webmanifest$ manifest.php [L]
 
   # 2) Ficha de vehículo: /auto/12-toyota-hilux-2021
   RewriteRule ^auto/([0-9]+)(-[a-z0-9-]*)?/?$ auto.php?id=$1 [L,QSA]

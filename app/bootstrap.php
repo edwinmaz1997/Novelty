@@ -10,6 +10,7 @@ mb_internal_encoding('UTF-8');
 
 require_once ROOT . '/app/helpers.php';
 require_once ROOT . '/app/icons.php';
+require_once ROOT . '/app/iconos.php';
 
 $__cfg = ROOT . '/app/config.local.php';
 if (is_file($__cfg)) {

@@ -342,9 +342,14 @@ function logo_html(string $variante = 'claro', string $cls = 'h-9 w-auto'): stri
 
 function head_identidad(): string
 {
-    $fav = img_ajuste('favicon', 'assets/img/favicon.png');
     return css_vars()
-        . ($fav ? '<link rel="icon" href="' . e($fav) . '" type="image/png"><link rel="apple-touch-icon" href="' . e(img_ajuste('icono', 'assets/img/icono.png')) . '">' : '')
+        . '<link rel="icon" href="' . e(icono_url('favicon.ico')) . '" sizes="any">'
+        . '<link rel="icon" type="image/png" sizes="32x32" href="' . e(icono_url('favicon-32.png')) . '">'
+        . '<link rel="icon" type="image/png" sizes="192x192" href="' . e(icono_url('icon-192.png')) . '">'
+        . '<link rel="apple-touch-icon" sizes="180x180" href="' . e(icono_url('apple-touch-icon.png')) . '">'
+        . '<link rel="manifest" href="' . e(url('manifest.webmanifest')) . '">'
+        . '<meta name="apple-mobile-web-app-title" content="' . e(negocio()) . '">'
+        . '<meta name="application-name" content="' . e(negocio()) . '">'
         . '<link rel="preload" href="' . url('assets/fonts/montserrat-var.woff2') . '" as="font" type="font/woff2" crossorigin>';
 }
 
