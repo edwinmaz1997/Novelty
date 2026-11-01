@@ -12,6 +12,7 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
         ['clientes', 'Clientes', 'users', 'admin/clientes.php', $admin],
         ['reportes', 'Reportes', 'chart', 'admin/reportes.php', $admin],
         ['catalogos', 'Marcas y modelos', 'layers', 'admin/catalogos.php', $admin],
+        ['etiquetas', 'Etiquetas', 'tag', 'admin/etiquetas.php', $admin],
         ['usuarios', 'Usuarios', 'key', 'admin/usuarios.php', $admin],
         ['ajustes', 'Ajustes', 'settings', 'admin/ajustes.php', $admin],
     ];

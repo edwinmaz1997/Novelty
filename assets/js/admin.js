@@ -77,26 +77,40 @@
       }).catch(function (e) { aviso(e.message, true); });
     });
 
-    // Etiquetas sugeridas
-    var et = document.getElementById('etiquetas');
-    document.querySelectorAll('[data-etiqueta]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var lista = et.value.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-        var t = b.getAttribute('data-etiqueta');
-        var i = lista.indexOf(t);
-        if (i >= 0) lista.splice(i, 1); else lista.push(t);
-        et.value = lista.join(', ');
-        marcarEtiquetas();
-      });
-    });
+    // Etiquetas (chips que se activan/desactivan + nueva etiqueta)
+    var et = document.getElementById('etiquetas'), chips = document.getElementById('etiquetas-chips');
+    function lista() { return et.value.split(',').map(function (x) { return x.trim(); }).filter(Boolean); }
+    function igual(a, b) { return a.toLowerCase() === b.toLowerCase(); }
     function marcarEtiquetas() {
-      var lista = et.value.split(',').map(function (x) { return x.trim(); });
-      document.querySelectorAll('[data-etiqueta]').forEach(function (b) {
-        var on = lista.indexOf(b.getAttribute('data-etiqueta')) >= 0;
-        b.classList.toggle('bg-ink-900', on); b.classList.toggle('text-white', on); b.classList.toggle('border-ink-900', on);
+      var l = lista();
+      chips.querySelectorAll('[data-etiqueta]').forEach(function (b) {
+        var on = l.some(function (x) { return igual(x, b.getAttribute('data-etiqueta')); });
+        b.classList.toggle('bg-brand-500', on); b.classList.toggle('text-white', on); b.classList.toggle('border-brand-500', on);
+        b.setAttribute('aria-pressed', on);
       });
     }
-    et.addEventListener('input', marcarEtiquetas); marcarEtiquetas();
+    function alternar(t) {
+      var l = lista(), i = l.findIndex(function (x) { return igual(x, t); });
+      if (i >= 0) l.splice(i, 1); else l.push(t);
+      et.value = l.join(', '); marcarEtiquetas();
+    }
+    chips.addEventListener('click', function (e) { var b = e.target.closest('[data-etiqueta]'); if (b) alternar(b.getAttribute('data-etiqueta')); });
+    var nueva = document.getElementById('etiqueta-nueva');
+    function agregarNueva() {
+      var t = nueva.value.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+      if (!t) return;
+      var existe = Array.prototype.find.call(chips.querySelectorAll('[data-etiqueta]'), function (b) { return igual(b.getAttribute('data-etiqueta'), t); });
+      if (!existe) {
+        existe = document.createElement('button'); existe.type = 'button'; existe.setAttribute('data-etiqueta', t);
+        existe.className = 'rounded-lg border border-ink-200 px-2.5 py-1.5 text-xs font-semibold text-ink-600 transition hover:border-ink-400';
+        existe.textContent = t; nueva.parentNode.before(existe);
+      }
+      if (!lista().some(function (x) { return igual(x, t); })) alternar(existe.getAttribute('data-etiqueta'));
+      nueva.value = '';
+    }
+    document.getElementById('etiqueta-agregar').addEventListener('click', agregarNueva);
+    nueva.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); agregarNueva(); } });
+    marcarEtiquetas();
 
     // Resumen de ganancia
     var res = document.getElementById('resumen');

@@ -47,7 +47,7 @@ if (es_post()) {
         'puertas'          => $n('puertas') !== null ? (int)p('puertas') : null,
         'pasajeros'        => $n('pasajeros') !== null ? (int)p('pasajeros') : null,
         'descripcion'      => p('descripcion'),
-        'etiquetas'        => mb_substr(implode(', ', array_filter(array_map('trim', explode(',', p('etiquetas'))))), 0, 255),
+        'etiquetas'        => mb_substr(implode(', ', etiquetas_lista(p('etiquetas'))), 0, 255),
         'precio_publicado' => a_numero(p('precio_publicado')),
         'destacado'        => p('destacado') === '1' ? 1 : 0,
     ];
@@ -107,6 +107,7 @@ if (es_post()) {
             q('UPDATE vehiculos SET codigo = ? WHERE id = ?', [codigo_vehiculo($id), $id]);
             flash('ok', 'Vehículo ingresado con código ' . codigo_vehiculo($id) . '. Ahora sube las fotos.');
         }
+        etiquetas_registrar(etiquetas_lista($in['etiquetas']));
         vehiculo_actualizar_buscar($id);
         redirect('admin/vehiculo.php?id=' . $id . ($v ? '' : '#fotos'));
     }
@@ -233,13 +234,28 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
             </select>
           <?php endif; ?>
         </label>
-        <label class="<?= C_LABEL ?> sm:col-span-2">Etiquetas <span class="font-normal text-ink-400">(separadas por coma; ayudan a la búsqueda)</span>
-          <input name="etiquetas" id="etiquetas" value="<?= e($d['etiquetas']) ?>" placeholder="Único dueño, Full extras" class="<?= C_INPUT ?>">
-        </label>
-        <div class="sm:col-span-2 -mt-2 flex flex-wrap gap-1.5">
-          <?php foreach (ETIQUETAS_SUGERIDAS as $t): ?>
-            <button type="button" data-etiqueta="<?= e($t) ?>" class="rounded-lg border border-ink-200 px-2.5 py-1 text-xs font-semibold text-ink-600 hover:border-ink-400">+ <?= e($t) ?></button>
-          <?php endforeach; ?>
+        <div class="sm:col-span-2">
+          <div class="flex items-center justify-between">
+            <span class="<?= C_LABEL ?>">Etiquetas <span class="font-normal text-ink-400">(toca para agregar o quitar; ayudan a la búsqueda)</span></span>
+            <?php if ($admin): ?><a href="<?= url('admin/etiquetas.php') ?>" class="text-xs font-semibold text-brand-600 hover:underline">Administrar</a><?php endif; ?>
+          </div>
+          <input type="hidden" name="etiquetas" id="etiquetas" value="<?= e($d['etiquetas']) ?>">
+          <div id="etiquetas-chips" class="mt-2 flex flex-wrap gap-1.5">
+            <?php
+            $catalogo = array_column(etiquetas_catalogo(), 'nombre');
+            foreach (etiquetas_lista($d['etiquetas']) as $t) {
+                if (!in_array(mb_strtolower($t), array_map('mb_strtolower', $catalogo), true)) {
+                    $catalogo[] = $t;
+                }
+            }
+            foreach ($catalogo as $t): ?>
+              <button type="button" data-etiqueta="<?= e($t) ?>" class="rounded-lg border border-ink-200 px-2.5 py-1.5 text-xs font-semibold text-ink-600 transition hover:border-ink-400"><?= e($t) ?></button>
+            <?php endforeach; ?>
+            <span class="inline-flex items-center gap-1 rounded-lg border border-dashed border-ink-300 pl-2 pr-1">
+              <input type="text" id="etiqueta-nueva" placeholder="Nueva etiqueta…" maxlength="60" class="w-32 border-0 bg-transparent p-1 text-xs focus:ring-0">
+              <button type="button" id="etiqueta-agregar" class="grid h-6 w-6 place-items-center rounded-md text-ink-500 hover:bg-ink-100" title="Agregar"><?= icon('plus', 'w-3.5 h-3.5') ?></button>
+            </span>
+          </div>
         </div>
         <label class="<?= C_LABEL ?> sm:col-span-2">Descripción
           <textarea name="descripcion" rows="5" placeholder="Estado general, servicios, extras, detalles importantes…" class="<?= C_INPUT ?>"><?= e($d['descripcion']) ?></textarea>

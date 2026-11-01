@@ -23,7 +23,10 @@ $nav_activo = 'inicio';
 $usa_swiper = true;
 include __DIR__ . '/partials/head.php';
 include __DIR__ . '/partials/header.php';
-$atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
+$atajos = array_column(q_all('SELECT nombre FROM etiquetas WHERE popular = 1 ORDER BY orden, nombre LIMIT 8'), 'nombre');
+if (!$atajos) {
+    $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
+}
 ?>
 
 <!-- HERO -->

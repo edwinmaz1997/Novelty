@@ -332,3 +332,76 @@ function vehiculo_eliminar(int $id): void
         @rmdir($dir);
     }
 }
+
+/* ---------- Etiquetas ---------- */
+function etiquetas_lista(?string $txt): array
+{
+    $out = [];
+    foreach (explode(',', (string)$txt) as $t) {
+        $t = trim(preg_replace('/\s+/', ' ', $t));
+        if ($t !== '' && !in_array(mb_strtolower($t), array_map('mb_strtolower', $out), true)) {
+            $out[] = mb_substr($t, 0, 60);
+        }
+    }
+    return $out;
+}
+
+function etiquetas_catalogo(): array
+{
+    try {
+        return q_all('SELECT * FROM etiquetas ORDER BY orden, nombre');
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+/** Registra en el catálogo las etiquetas nuevas que se escribieron a mano. */
+function etiquetas_registrar(array $lista): void
+{
+    $st = db()->prepare('INSERT IGNORE INTO etiquetas (nombre, orden) VALUES (?, 100)');
+    foreach ($lista as $t) {
+        $st->execute([$t]);
+    }
+}
+
+/** Renombra (o quita si $nueva es null) una etiqueta en todos los vehículos. Devuelve cuántos cambió. */
+function etiquetas_reemplazar_en_vehiculos(string $vieja, ?string $nueva): int
+{
+    $n = 0;
+    $vk = mb_strtolower($vieja);
+    foreach (q_all('SELECT id, etiquetas FROM vehiculos WHERE etiquetas LIKE ?', ['%' . $vieja . '%']) as $r) {
+        $lista = etiquetas_lista($r['etiquetas']);
+        $cambio = false;
+        foreach ($lista as $i => $t) {
+            if (mb_strtolower($t) === $vk) {
+                $cambio = true;
+                if ($nueva === null) {
+                    unset($lista[$i]);
+                } else {
+                    $lista[$i] = $nueva;
+                }
+            }
+        }
+        if ($cambio) {
+            q('UPDATE vehiculos SET etiquetas = ? WHERE id = ?', [implode(', ', etiquetas_lista(implode(',', $lista))), $r['id']]);
+            vehiculo_actualizar_buscar((int)$r['id']);
+            $n++;
+        }
+    }
+    return $n;
+}
+
+function etiqueta_uso(string $t): int
+{
+    $n = 0;
+    $tk = mb_strtolower($t);
+    foreach (q_all('SELECT etiquetas FROM vehiculos WHERE etiquetas LIKE ?', ['%' . $t . '%']) as $r) {
+        foreach (etiquetas_lista($r['etiquetas']) as $x) {
+            if (mb_strtolower($x) === $tk) {
+                $n++;
+                break;
+            }
+        }
+    }
+    return $n;
+}

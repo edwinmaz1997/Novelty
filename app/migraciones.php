@@ -3,7 +3,7 @@
  * Migraciones de base de datos. Se ejecutan solas al cargar cualquier página
  * cuando la versión guardada en ajustes.db_version es menor a DB_VERSION.
  */
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 const AJUSTES_V2 = [
     'color_principal'   => '#005A50',
@@ -55,6 +55,25 @@ function migrar(): void
     $pdo = db();
     if ($v < 2) {
         migrar_v2($pdo);
+    }
+    if ($v < 5) {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS etiquetas (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(60) NOT NULL,
+            popular TINYINT(1) NOT NULL DEFAULT 0,
+            orden INT NOT NULL DEFAULT 0,
+            creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_etiqueta (nombre)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $ins = $pdo->prepare('INSERT IGNORE INTO etiquetas (nombre, orden) VALUES (?, ?)');
+        foreach (ETIQUETAS_SUGERIDAS as $i => $t) {
+            $ins->execute([$t, $i + 1]);
+        }
+        foreach (q_all("SELECT etiquetas FROM vehiculos WHERE etiquetas IS NOT NULL AND etiquetas <> ''") as $r) {
+            foreach (etiquetas_lista($r['etiquetas']) as $t) {
+                $ins->execute([$t, 100]);
+            }
+        }
     }
     if ($v < 4) {
         q("INSERT IGNORE INTO ajustes (clave, valor) VALUES ('mapa_coords', '')");
