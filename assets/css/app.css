@@ -59,3 +59,7 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
 /* Hero con imagen de fondo */
 .hero-img { background-size: cover; background-position: center; }
 .hero-img::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(var(--brand-950) / .92) 0%, rgb(var(--brand-950) / .7) 55%, rgb(var(--brand-950) / .35) 100%); }
+
+/* Puntos del carrusel de marcas */
+.marca-punto { display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background: rgb(255 255 255 / .25); cursor: pointer; transition: all .25s; }
+.marca-punto.activo { width: 22px; background: #fff; }

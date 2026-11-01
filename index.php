@@ -103,13 +103,24 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
       <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"><?= e(ajuste('marcas_titulo', 'Nuestras Marcas')) ?></h2>
       <?php if (ajuste('marcas_subtitulo')): ?><p class="mt-3 text-white/70"><?= e(ajuste('marcas_subtitulo')) ?></p><?php endif; ?>
     </div>
-    <div class="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4">
-      <?php foreach ($logos as $m): ?>
-        <a href="<?= url('autos.php?marca=' . (int)$m['id']) ?>" class="group relative flex h-28 items-center justify-center rounded-2xl border border-white/10 bg-white/[.03] px-6 transition hover:border-white/30 hover:bg-white/[.07] sm:h-32" title="<?= e($m['nombre']) ?>">
-          <img src="<?= e(url($m['logo'])) ?>" alt="<?= e($m['nombre']) ?>" loading="lazy" class="max-h-14 max-w-[70%] object-contain opacity-80 transition group-hover:scale-105 group-hover:opacity-100 sm:max-h-16">
-          <?php if ((int)$m['total']): ?><span class="absolute bottom-2.5 text-[11px] font-semibold text-white/0 transition group-hover:text-white/70"><?= (int)$m['total'] ?> disponible<?= (int)$m['total'] === 1 ? '' : 's' ?></span><?php endif; ?>
-        </a>
-      <?php endforeach; ?>
+    <div class="relative mt-12">
+      <div class="swiper marcas">
+        <div class="swiper-wrapper">
+          <?php foreach ($logos as $m): ?>
+            <div class="swiper-slide">
+              <a href="<?= url('autos.php?marca=' . (int)$m['id']) ?>" class="group relative flex h-28 items-center justify-center rounded-2xl border border-white/10 bg-white/[.03] px-6 transition hover:border-white/30 hover:bg-white/[.07] sm:h-32" title="<?= e($m['nombre']) ?>">
+                <img src="<?= e(url($m['logo'])) ?>" alt="<?= e($m['nombre']) ?>" loading="lazy" class="max-h-14 max-w-[70%] object-contain opacity-80 transition group-hover:scale-105 group-hover:opacity-100 sm:max-h-16">
+                <?php if ((int)$m['total']): ?><span class="absolute bottom-2.5 text-[11px] font-semibold text-white/0 transition group-hover:text-white/70"><?= (int)$m['total'] ?> disponible<?= (int)$m['total'] === 1 ? '' : 's' ?></span><?php endif; ?>
+              </a>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+      <div class="mt-8 flex items-center justify-center gap-3">
+        <button class="marcas-prev grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80 hover:border-white/40 hover:text-white" aria-label="Anterior"><?= icon('chev-l') ?></button>
+        <div class="marcas-pag !static flex !w-auto items-center gap-1.5"></div>
+        <button class="marcas-next grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80 hover:border-white/40 hover:text-white" aria-label="Siguiente"><?= icon('chev-r') ?></button>
+      </div>
     </div>
   </div>
 </section>
@@ -179,6 +190,16 @@ $scripts = ['https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js'];
 $script_inline = <<<HTML
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelector('.marcas')) {
+    var n = document.querySelectorAll('.marcas .swiper-slide').length;
+    new Swiper('.marcas', {
+      slidesPerView: 2.2, spaceBetween: 12, grabCursor: true, loop: n > 6, speed: 600,
+      autoplay: { delay: 2600, disableOnInteraction: false, pauseOnMouseEnter: true },
+      navigation: { nextEl: '.marcas-next', prevEl: '.marcas-prev' },
+      pagination: { el: '.marcas-pag', clickable: true, bulletClass: 'marca-punto', bulletActiveClass: 'activo' },
+      breakpoints: { 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }
+    });
+  }
   if (!document.querySelector('.destacados')) return;
   new Swiper('.destacados', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
