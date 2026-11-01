@@ -36,7 +36,6 @@ $redes = array_filter([
   <div class="border-t border-white/5">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 py-5 flex flex-col sm:flex-row gap-2 justify-between text-xs text-brand-200/50">
       <span>© <?= date('Y') ?> <?= e(negocio()) ?>. Todos los derechos reservados.</span>
-      <a href="<?= url('admin/') ?>" class="hover:text-white">Acceso administración</a>
     </div>
   </div>
 </footer>
