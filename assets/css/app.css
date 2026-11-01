@@ -141,3 +141,15 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
 
 .hero-carro { position: absolute; left: 0; z-index: 20; height: auto; pointer-events: none; will-change: transform;
   filter: drop-shadow(0 14px 10px rgba(0, 0, 0, .45)); }
+
+/* Entrada de títulos de sección */
+.rev-titulo .rev-mascara { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .08em; margin-bottom: -.08em; }
+.rev-titulo .rev-palabra { display: inline-block; transform: translate3d(0, 105%, 0) rotate(4deg); opacity: 0;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1), opacity .5s ease; }
+.rev-titulo.rev-visible .rev-palabra { transform: none; opacity: 1; }
+.rev-bloque { opacity: 0; transform: translate3d(0, 24px, 0); transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+.rev-bloque.rev-visible { opacity: 1; transform: none; }
+.rev-ceja { opacity: 0; transform: translate3d(-18px, 0, 0); letter-spacing: .32em !important; transition: opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1), letter-spacing .9s cubic-bezier(.2,.8,.2,1); }
+.rev-ceja.rev-visible { opacity: 1; transform: none; letter-spacing: .18em !important; }
+.rev-sub { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity .7s ease .25s, transform .8s cubic-bezier(.2,.8,.2,1) .25s; }
+.rev-sub.rev-visible { opacity: 1; transform: none; }
