@@ -5,7 +5,7 @@ $destacados = vehiculos_buscar(['destacado' => 1], true, 1, 10)['items'];
 if (count($destacados) < 3) {
     $destacados = vehiculos_buscar(['orden' => 'relevantes'], true, 1, 10)['items'];
 }
-$recientes = vehiculos_buscar(['orden' => 'recientes'], true, 1, 8);
+$recientes = vehiculos_buscar(['orden' => 'recientes'], true, 1, 12);
 $total     = $recientes['total'];
 $marcas    = facetas_marcas();
 $logos     = ajuste('mostrar_marcas', '1') === '1'
@@ -174,19 +174,27 @@ if (!$atajos) {
 <?php endif; ?>
 
 <!-- RECIENTES -->
-<section class="mx-auto max-w-7xl px-4 sm:px-6 pt-16">
+<section class="mx-auto max-w-7xl overflow-hidden px-4 sm:px-6 pt-16 pb-2">
   <div class="flex items-end justify-between gap-4">
     <div>
       <p class="text-xs font-bold uppercase tracking-[.18em] text-brand-600">Nuevo en el predio</p>
       <h2 class="mt-1.5 text-2xl font-extrabold tracking-tight sm:text-3xl">Recién ingresados</h2>
     </div>
-    <a href="<?= url('autos.php?orden=recientes') ?>" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-ink-700 hover:text-brand-600">Ver todos <?= icon('arrow-r', 'w-4 h-4') ?></a>
+    <div class="flex items-center gap-2">
+      <a href="<?= url('autos.php?orden=recientes') ?>" class="mr-2 hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-ink-700 hover:text-brand-600">Ver todos <?= icon('arrow-r', 'w-4 h-4') ?></a>
+      <?php if (count($recientes['items']) > 1): ?>
+      <button class="rec-prev grid h-11 w-11 place-items-center rounded-full border border-ink-200 text-ink-700 hover:bg-ink-50" aria-label="Anterior"><?= icon('chev-l') ?></button>
+      <button class="rec-next grid h-11 w-11 place-items-center rounded-full border border-ink-200 text-ink-700 hover:bg-ink-50" aria-label="Siguiente"><?= icon('chev-r') ?></button>
+      <?php endif; ?>
+    </div>
   </div>
   <?php if ($recientes['items']): ?>
-  <div class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-    <?php foreach ($recientes['items'] as $i => $v): ?>
-      <div class="<?= $i >= 4 ? 'hidden sm:block' : '' ?>"><?php include __DIR__ . '/partials/card.php'; ?></div>
-    <?php endforeach; ?>
+  <div class="swiper recientes mt-7 !overflow-visible sm:!overflow-hidden">
+    <div class="swiper-wrapper">
+      <?php foreach ($recientes['items'] as $v): ?>
+        <div class="swiper-slide !h-auto"><?php include __DIR__ . '/partials/card.php'; ?></div>
+      <?php endforeach; ?>
+    </div>
   </div>
   <?php else: ?>
   <div class="mt-7 rounded-2xl border border-dashed border-ink-200 p-12 text-center text-ink-500">Pronto publicaremos vehículos aquí.</div>
@@ -259,6 +267,13 @@ document.addEventListener('DOMContentLoaded', function () {
       navigation: { nextEl: '.marcas-next', prevEl: '.marcas-prev' },
       pagination: { el: '.marcas-pag', clickable: true, bulletClass: 'marca-punto', bulletActiveClass: 'activo' },
       breakpoints: { 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }
+    });
+  }
+  if (document.querySelector('.recientes')) {
+    new Swiper('.recientes', {
+      slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
+      navigation: { nextEl: '.rec-next', prevEl: '.rec-prev' },
+      breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 24 } }
     });
   }
   if (!document.querySelector('.destacados')) return;
