@@ -22,7 +22,7 @@ $links = [
       <a href="<?= url('autos.php') ?>" class="hidden sm:inline-flex md:hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-ink-700 hover:bg-ink-50"><?= icon('search', 'w-4 h-4') ?>Buscar</a>
       <?php if (wa_numero()): ?>
       <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-600 transition">
-        <?= icon('message', 'w-4 h-4') ?><span class="hidden sm:inline">Escríbenos</span>
+        <?= icon('whatsapp', 'w-4 h-4') ?><span class="hidden sm:inline">Escríbenos</span>
       </a>
       <?php endif; ?>
       <button type="button" id="btn-menu" class="hamburguesa md:hidden relative grid h-10 w-10 place-items-center rounded-xl text-ink-800 hover:bg-ink-50" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil">
@@ -46,7 +46,7 @@ $links = [
       </ul>
       <div class="menu-item mt-auto grid gap-2 pt-8" style="--i:<?= $i ?>">
         <?php if (wa_numero()): ?>
-          <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener" class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-[#25D366] font-bold text-white"><?= icon('message') ?>Escríbenos por WhatsApp</a>
+          <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener" class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-[#25D366] font-bold text-white"><?= icon('whatsapp') ?>Escríbenos por WhatsApp</a>
         <?php endif; ?>
         <?php if (ajuste('telefono')): ?>
           <a href="<?= e(tel_link()) ?>" class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-ink-200 font-bold text-ink-800"><?= icon('phone', 'w-5 h-5') ?>Llamar · <?= e(ajuste('telefono')) ?></a>

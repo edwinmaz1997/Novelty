@@ -22,7 +22,7 @@ $redes = array_filter([
       <h4 class="text-xs font-semibold uppercase tracking-[.16em] text-brand-200/50">Contacto</h4>
       <ul class="mt-4 space-y-3 text-sm">
         <?php if (ajuste('telefono')): ?><li class="flex gap-2.5"><?= icon('phone', 'w-4 h-4 mt-0.5 text-brand-200/50') ?><a href="<?= e(tel_link()) ?>" class="hover:text-white"><?= e(ajuste('telefono')) ?></a></li><?php endif; ?>
-        <?php if (wa_numero()): ?><li class="flex gap-2.5"><?= icon('message', 'w-4 h-4 mt-0.5 text-brand-200/50') ?><a href="<?= e(wa_link()) ?>" target="_blank" rel="noopener" class="hover:text-white">WhatsApp</a></li><?php endif; ?>
+        <?php if (wa_numero()): ?><li class="flex gap-2.5"><?= icon('whatsapp', 'w-4 h-4 mt-0.5 text-brand-200/50') ?><a href="<?= e(wa_link()) ?>" target="_blank" rel="noopener" class="hover:text-white">WhatsApp</a></li><?php endif; ?>
         <?php if (ajuste('email')): ?><li class="flex gap-2.5"><?= icon('external', 'w-4 h-4 mt-0.5 text-brand-200/50') ?><a href="mailto:<?= e(ajuste('email')) ?>" class="hover:text-white"><?= e(ajuste('email')) ?></a></li><?php endif; ?>
         <?php if (ajuste('direccion')): ?><li class="flex gap-2.5"><?= icon('pin', 'w-4 h-4 mt-0.5 text-brand-200/50') ?><button type="button" data-abrir-mapa class="text-left hover:text-white underline decoration-white/20 underline-offset-4 hover:decoration-white"><?= e(ajuste('direccion')) ?></button></li><?php endif; ?>
       </ul>
@@ -74,7 +74,7 @@ $redes = array_filter([
 <?php if (wa_numero() && empty($ocultar_wa_flotante)): ?>
 <a href="<?= e(wa_link('Hola, quisiera información sobre sus vehículos.')) ?>" target="_blank" rel="noopener"
    class="wa-flotante fixed bottom-5 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 hover:scale-105 transition" aria-label="WhatsApp">
-  <?= icon('message', 'w-6 h-6') ?>
+  <?= icon('whatsapp', 'w-6 h-6') ?>
 </a>
 <?php endif; ?>
 

@@ -155,7 +155,7 @@ $msg = vehiculo_wa_mensaje($v);
           </div>
           <div class="mt-6 grid gap-2">
             <?php if (wa_numero()): ?>
-            <a href="<?= e(wa_link($msg)) ?>" target="_blank" rel="noopener" class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] font-bold text-white hover:brightness-95 transition"><?= icon('message') ?>Me interesa · WhatsApp</a>
+            <a href="<?= e(wa_link($msg)) ?>" target="_blank" rel="noopener" class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] font-bold text-white hover:brightness-95 transition"><?= icon('whatsapp') ?>Me interesa · WhatsApp</a>
             <?php endif; ?>
             <div class="grid grid-cols-2 gap-2">
               <a href="<?= e(tel_link()) ?>" class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-ink-200 font-semibold text-ink-800 hover:bg-ink-50"><?= icon('phone', 'w-4 h-4') ?>Llamar</a>
@@ -193,7 +193,7 @@ $msg = vehiculo_wa_mensaje($v);
       <p class="text-xl font-extrabold tabular-nums"><?= money($v['precio_publicado']) ?></p>
     </div>
     <a href="<?= e(tel_link()) ?>" class="grid h-12 w-12 place-items-center rounded-xl border border-ink-200 text-ink-800" aria-label="Llamar"><?= icon('phone') ?></a>
-    <?php if (wa_numero()): ?><a href="<?= e(wa_link($msg)) ?>" target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2 rounded-xl bg-[#25D366] px-5 font-bold text-white"><?= icon('message') ?>WhatsApp</a><?php endif; ?>
+    <?php if (wa_numero()): ?><a href="<?= e(wa_link($msg)) ?>" target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2 rounded-xl bg-[#25D366] px-5 font-bold text-white"><?= icon('whatsapp') ?>WhatsApp</a><?php endif; ?>
   </div>
 </div>
 

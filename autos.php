@@ -155,7 +155,7 @@ $campo = 'h-11 w-full rounded-xl border-ink-200 bg-white text-sm font-medium tex
       <p class="mt-1 text-sm text-ink-500">Prueba con menos filtros o escríbenos y te ayudamos a encontrarlo.</p>
       <div class="mt-5 flex justify-center gap-2">
         <button type="button" data-limpiar class="rounded-xl border border-ink-200 px-4 py-2.5 text-sm font-semibold hover:bg-ink-50">Limpiar filtros</button>
-        <?php if (wa_numero()): ?><a href="<?= e(wa_link('Hola, estoy buscando un vehículo y no lo encontré en el sitio.')) ?>" target="_blank" rel="noopener" class="rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-semibold text-white">Pedir por WhatsApp</a><?php endif; ?>
+        <?php if (wa_numero()): ?><a href="<?= e(wa_link('Hola, estoy buscando un vehículo y no lo encontré en el sitio.')) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white"><?= icon('whatsapp', 'w-4 h-4') ?>Pedir por WhatsApp</a><?php endif; ?>
       </div>
     </div>
 

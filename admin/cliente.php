@@ -80,7 +80,7 @@ $lista = function (array $items, string $vacio, bool $venta) {
       <a href="<?= url('admin/clientes.php') ?>" class="<?= C_BTN2 ?>">Volver</a>
     </div>
     <?php if ($c && $c['telefono']): ?>
-      <a href="https://wa.me/<?= e(preg_replace('/\D/', '', (strlen(preg_replace('/\D/', '', $c['telefono'])) === 8 ? '502' : '') . $c['telefono'])) ?>" target="_blank" class="mt-3 flex items-center justify-center gap-2 rounded-xl bg-[#25D366]/10 py-2.5 text-sm font-semibold text-[#128C4B] hover:bg-[#25D366]/20"><?= icon('message', 'w-4 h-4') ?>Escribir por WhatsApp</a>
+      <a href="https://wa.me/<?= e(preg_replace('/\D/', '', (strlen(preg_replace('/\D/', '', $c['telefono'])) === 8 ? '502' : '') . $c['telefono'])) ?>" target="_blank" class="mt-3 flex items-center justify-center gap-2 rounded-xl bg-[#25D366]/10 py-2.5 text-sm font-semibold text-[#128C4B] hover:bg-[#25D366]/20"><?= icon('whatsapp', 'w-4 h-4') ?>Escribir por WhatsApp</a>
     <?php endif; ?>
   </form>
 

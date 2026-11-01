@@ -204,7 +204,7 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
     </div>
     <div class="flex flex-wrap gap-2 lg:justify-end">
       <?php if (wa_numero()): ?>
-        <a href="<?= e(wa_link('Hola, quiero vender / consignar mi vehículo.')) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white hover:bg-brand-600 transition"><?= icon('message', 'w-4 h-4') ?>Quiero vender mi carro</a>
+        <a href="<?= e(wa_link('Hola, quiero vender / consignar mi vehículo.')) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white hover:bg-brand-600 transition"><?= icon('whatsapp', 'w-4 h-4') ?>Quiero vender mi carro</a>
       <?php endif; ?>
       <a href="<?= url('autos.php') ?>" class="inline-flex items-center gap-2 rounded-xl border border-ink-200 px-5 py-3 text-sm font-bold text-ink-800 hover:bg-ink-50 transition">Ver inventario <?= icon('arrow-r', 'w-4 h-4') ?></a>
     </div>
