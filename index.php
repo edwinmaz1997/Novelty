@@ -320,24 +320,26 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   carrusel('.marcas', {
-    slidesPerView: 2.2, spaceBetween: 12, grabCursor: true, speed: 600,
-    autoplay: { delay: 2600, disableOnInteraction: false, pauseOnMouseEnter: true },
+    slidesPerView: 2.2, spaceBetween: 12, grabCursor: true, speed: 450,
+    autoplay: { delay: 1600, disableOnInteraction: false, pauseOnMouseEnter: true },
     navigation: { nextEl: '.marcas-next', prevEl: '.marcas-prev' },
     breakpoints: { 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }
   });
   carrusel('.destacados', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
     navigation: { nextEl: '.dest-next', prevEl: '.dest-prev' },
-    autoplay: { delay: 5000, disableOnInteraction: true, pauseOnMouseEnter: true },
+    speed: 450, autoplay: { delay: 2800, disableOnInteraction: false, pauseOnMouseEnter: true },
     breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
   carrusel('.ofertas', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
-    navigation: { nextEl: '.ofe-next', prevEl: '.ofe-prev' }, breakpoints: JSON.parse(JSON.stringify(vehBp))
+    navigation: { nextEl: '.ofe-next', prevEl: '.ofe-prev' },
+    speed: 450, autoplay: { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }, breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
   carrusel('.recientes', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
-    navigation: { nextEl: '.rec-next', prevEl: '.rec-prev' }, breakpoints: JSON.parse(JSON.stringify(vehBp))
+    navigation: { nextEl: '.rec-next', prevEl: '.rec-prev' },
+    speed: 450, autoplay: { delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }, breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
 });
 </script>
