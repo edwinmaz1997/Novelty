@@ -45,5 +45,6 @@ jobs:
             tailwind.config.js
             assets/css/tw-input.css
             uploads/vehiculos/**
+            uploads/sitio/**
             app/config.local.php
             .env

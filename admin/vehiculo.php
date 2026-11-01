@@ -317,7 +317,7 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
           <textarea name="notas_internas" rows="3" placeholder="Acuerdos con el propietario, ofertas recibidas…" class="<?= C_INPUT ?>"><?= e($d['notas_internas']) ?></textarea>
         </label>
       </div>
-      <div id="resumen" class="mt-5 rounded-xl bg-ink-950 p-4 text-sm text-ink-300" data-comision="<?= e(ajuste('comision_pct', '5')) ?>" data-moneda="<?= e(ajuste('moneda', 'Q')) ?>">
+      <div id="resumen" class="mt-5 rounded-xl bg-brand-950 p-4 text-sm text-ink-300" data-comision="<?= e(ajuste('comision_pct', '5')) ?>" data-moneda="<?= e(ajuste('moneda', 'Q')) ?>">
         <div class="flex justify-between"><span>Precio al cliente</span><span id="r-precio" class="font-semibold text-white tabular-nums">—</span></div>
         <div class="mt-1 flex justify-between"><span>− Propietario</span><span id="r-prop" class="tabular-nums">—</span></div>
         <div class="mt-1 flex justify-between"><span>− Gastos</span><span id="r-gastos" class="tabular-nums">—</span></div>

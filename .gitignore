@@ -4,3 +4,4 @@ uploads/vehiculos/*
 node_modules/
 .DS_Store
 *.log
+uploads/sitio/*

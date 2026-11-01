@@ -1,5 +1,17 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+/* Color principal: se sobrescribe desde Ajustes (ver css_vars()) */
+:root {
+  --brand-50: 230 239 238; --brand-100: 214 229 227; --brand-200: 179 207 203; --brand-300: 128 173 168; --brand-400: 64 131 124;
+  --brand-500: 0 90 80; --brand-600: 0 77 68; --brand-700: 0 63 56; --brand-800: 0 50 44; --brand-900: 0 36 32; --brand-950: 0 25 22;
+}
 html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
-body { font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 [x-cloak], [hidden] { display: none !important; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
@@ -8,8 +20,8 @@ body { font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility
 /* Patrón del hero */
 .hero-grid {
   background-image:
-    radial-gradient(60rem 30rem at 85% -10%, rgba(242, 92, 5, .28), transparent 60%),
-    radial-gradient(40rem 25rem at 0% 110%, rgba(56, 120, 255, .18), transparent 60%),
+    radial-gradient(60rem 30rem at 85% -10%, rgb(var(--brand-400) / .35), transparent 60%),
+    radial-gradient(40rem 25rem at 0% 110%, rgb(var(--brand-500) / .45), transparent 60%),
     linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
   background-size: auto, auto, 44px 44px, 44px 44px;
@@ -25,7 +37,7 @@ body { font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility
 /* Swiper */
 .swiper-button-disabled { opacity: .35; pointer-events: none; }
 .thumbs .swiper-slide { opacity: .5; transition: opacity .2s; cursor: pointer; }
-.thumbs .swiper-slide-thumb-active { opacity: 1; outline: 2px solid #F25C05; outline-offset: -2px; }
+.thumbs .swiper-slide-thumb-active { opacity: 1; outline: 2px solid rgb(var(--brand-500)); outline-offset: -2px; }
 .swiper-zoom-container > img { max-height: 100vh; object-fit: contain; }
 
 /* Tarjeta cargando */
@@ -43,3 +55,7 @@ body { font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility
 /* Admin: fotos ordenables */
 .sortable-ghost { opacity: .35; }
 .sortable-chosen { box-shadow: 0 10px 30px -10px rgba(11,18,32,.35); }
+
+/* Hero con imagen de fondo */
+.hero-img { background-size: cover; background-position: center; }
+.hero-img::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(var(--brand-950) / .92) 0%, rgb(var(--brand-950) / .7) 55%, rgb(var(--brand-950) / .35) 100%); }

@@ -210,7 +210,7 @@ if ($tab === 'ventas') {
   data: { labels: ' . json_encode(array_map(function ($m) { return mb_substr(MESES[$m], 0, 3); }, range(1, 12))) . ',
     datasets: [
       { type: "bar", label: "Ganancia", data: ' . json_encode(array_values(array_column($meses, 'g'))) . ', backgroundColor: "#10B981", borderRadius: 6, yAxisID: "y", maxBarThickness: 30 },
-      { type: "line", label: "Vendidos", data: ' . json_encode(array_values(array_column($meses, 'n'))) . ', borderColor: "#F25C05", backgroundColor: "#F25C05", tension: .3, cubicInterpolationMode: "monotone", yAxisID: "y1" }
+      { type: "line", label: "Vendidos", data: ' . json_encode(array_values(array_column($meses, 'n'))) . ', borderColor: "' . e(ajuste('color_principal', '#005A50')) . '", backgroundColor: "' . e(ajuste('color_principal', '#005A50')) . '", tension: .3, cubicInterpolationMode: "monotone", yAxisID: "y1" }
     ] },
   options: { maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
     plugins: { legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 8 } } },

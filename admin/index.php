@@ -123,7 +123,7 @@ new Chart(document.getElementById("grafica"), {
   data: {
     labels: ' . json_encode(array_column($serie, 'mes')) . ',
     datasets: [
-      { type: "bar", label: "Ganancia", data: ' . json_encode(array_column($serie, 'g')) . ', backgroundColor: "#F25C05", borderRadius: 6, yAxisID: "y", maxBarThickness: 34 },
+      { type: "bar", label: "Ganancia", data: ' . json_encode(array_column($serie, 'g')) . ', backgroundColor: "' . e(ajuste('color_principal', '#005A50')) . '", borderRadius: 6, yAxisID: "y", maxBarThickness: 34 },
       { type: "line", label: "Vendidos", data: ' . json_encode(array_column($serie, 'n')) . ', borderColor: "#0B1220", backgroundColor: "#0B1220", tension: .3, cubicInterpolationMode: "monotone", pointRadius: 3, yAxisID: "y1" }
     ]
   },

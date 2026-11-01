@@ -75,6 +75,7 @@ if (ya_instalado()) {
             $pdo->prepare('INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)')
                 ->execute([$admin_nombre, $admin_usuario, password_hash($admin_pass, PASSWORD_DEFAULT), 'admin']);
             $uid = (int)$pdo->lastInsertId();
+            migrar();
             if (!empty($_POST['demo'])) {
                 seed_demo($pdo, $uid);
                 foreach ($pdo->query('SELECT id FROM vehiculos')->fetchAll(PDO::FETCH_COLUMN) as $vid) {
@@ -99,8 +100,8 @@ if (ya_instalado()) {
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Instalación · Novelty</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= asset('assets/css/tw.css') ?>">
+  <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
 </head>
 <body class="min-h-screen bg-ink-50 font-sans text-ink-900">
 <div class="mx-auto max-w-2xl px-4 py-12">
@@ -141,7 +142,7 @@ if (ya_instalado()) {
       <fieldset class="rounded-2xl bg-white p-6 ring-1 ring-ink-100">
         <legend class="px-1 text-sm font-bold uppercase tracking-wider text-ink-500">Negocio y administrador</legend>
         <div class="grid gap-4 sm:grid-cols-2">
-          <label class="block text-sm font-semibold">Nombre del negocio<input name="negocio" value="<?= e(p('negocio', 'Novelty Autos')) ?>" class="mt-1 w-full rounded-xl border-ink-200"></label>
+          <label class="block text-sm font-semibold">Nombre del negocio<input name="negocio" value="<?= e(p('negocio', 'Novelty Motors')) ?>" class="mt-1 w-full rounded-xl border-ink-200"></label>
           <label class="block text-sm font-semibold">WhatsApp (con 502)<input name="whatsapp" value="<?= e(p('whatsapp')) ?>" placeholder="50255555555" class="mt-1 w-full rounded-xl border-ink-200"></label>
           <label class="block text-sm font-semibold">Tu nombre<input name="admin_nombre" value="<?= e(p('admin_nombre')) ?>" required class="mt-1 w-full rounded-xl border-ink-200"></label>
           <label class="block text-sm font-semibold">Usuario<input name="admin_usuario" value="<?= e(p('admin_usuario', 'admin')) ?>" required class="mt-1 w-full rounded-xl border-ink-200"></label>

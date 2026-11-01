@@ -23,32 +23,30 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
   <meta name="robots" content="noindex">
   <meta name="csrf" content="<?= e(csrf_token()) ?>">
   <title><?= e($titulo) ?> · Panel <?= e(negocio()) ?></title>
-  <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= asset('assets/css/tw.css') ?>">
   <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
+  <?= head_identidad() ?>
 </head>
 <body class="min-h-screen bg-ink-50 font-sans text-ink-900 antialiased">
-<div id="admin-velo" class="fixed inset-0 z-40 hidden bg-ink-950/50 lg:hidden"></div>
-<aside id="admin-menu" class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-ink-950 text-ink-300 transition-transform lg:translate-x-0">
-  <a href="<?= url('admin/') ?>" class="flex h-16 items-center gap-2.5 px-5">
-    <span class="grid h-9 w-9 place-items-center rounded-xl bg-white font-extrabold text-ink-900">N</span>
-    <span class="leading-tight"><span class="block font-extrabold text-white"><?= e(negocio()) ?></span><span class="text-[11px] font-semibold uppercase tracking-wider text-ink-500">Panel</span></span>
+<div id="admin-velo" class="fixed inset-0 z-40 hidden bg-brand-950/50 lg:hidden"></div>
+<aside id="admin-menu" class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-brand-950 text-brand-100/70 transition-transform lg:translate-x-0">
+  <a href="<?= url('admin/') ?>" class="flex h-16 items-center gap-3 px-5">
+    <?= logo_html('oscuro', 'h-5 w-auto max-w-[170px]') ?>
   </a>
   <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-4 text-[14px] font-medium">
     <?php foreach ($menu as $m): if (!$m[4]) continue; $on = $m[0] === $activo; ?>
       <a href="<?= url($m[3]) ?>" class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition <?= $on ? 'bg-white/10 text-white' : 'hover:bg-white/5 hover:text-white' ?>">
-        <?= icon($m[2], 'w-[18px] h-[18px] ' . ($on ? 'text-brand-400' : 'text-ink-500')) ?><?= e($m[1]) ?>
+        <?= icon($m[2], 'w-[18px] h-[18px] ' . ($on ? 'text-brand-200' : 'text-brand-200/40')) ?><?= e($m[1]) ?>
       </a>
     <?php endforeach; ?>
-    <a href="<?= url('') ?>" target="_blank" class="mt-4 flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-white/5 hover:text-white"><?= icon('external', 'w-[18px] h-[18px] text-ink-500') ?>Ver sitio</a>
+    <a href="<?= url('') ?>" target="_blank" class="mt-4 flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-white/5 hover:text-white"><?= icon('external', 'w-[18px] h-[18px] text-brand-200/40') ?>Ver sitio</a>
   </nav>
   <div class="border-t border-white/5 p-3">
     <div class="flex items-center gap-3 rounded-lg px-3 py-2">
       <span class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-sm font-bold text-white"><?= e(mb_strtoupper(mb_substr($u['nombre'], 0, 1))) ?></span>
       <div class="min-w-0 flex-1">
         <p class="truncate text-sm font-semibold text-white"><?= e($u['nombre']) ?></p>
-        <p class="text-xs text-ink-500"><?= $admin ? 'Administrador' : 'Test · carga de vehículos' ?></p>
+        <p class="text-xs text-brand-200/50"><?= $admin ? 'Administrador' : 'Test · carga de vehículos' ?></p>
       </div>
       <a href="<?= url('admin/logout.php') ?>" class="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/10 hover:text-white" title="Salir"><?= icon('logout', 'w-4 h-4') ?></a>
     </div>

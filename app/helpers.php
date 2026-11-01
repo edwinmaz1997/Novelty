@@ -263,3 +263,70 @@ function foto_url(?string $archivo, string $tam = 'md'): string
     }
     return url('uploads/vehiculos/' . $archivo);
 }
+
+/* ---------- Identidad visual (configurable en Ajustes) ---------- */
+function hex_rgb(string $hex): array
+{
+    $hex = ltrim($hex, '#');
+    if (strlen($hex) === 3) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+    if (!preg_match('/^[0-9a-fA-F]{6}$/', $hex)) {
+        $hex = '005A50';
+    }
+    return [hexdec(substr($hex, 0, 2)), hexdec(substr($hex, 2, 2)), hexdec(substr($hex, 4, 2))];
+}
+
+/** Escala de tonos 50–950 a partir del color principal (500). */
+function paleta(string $hex): array
+{
+    list($r, $g, $b) = hex_rgb($hex);
+    $pasos = [50 => [.92, 255], 100 => [.84, 255], 200 => [.68, 255], 300 => [.48, 255], 400 => [.24, 255], 500 => [0, 0],
+        600 => [.14, 0], 700 => [.28, 0], 800 => [.44, 0], 900 => [.6, 0], 950 => [.72, 0]];
+    $out = [];
+    foreach ($pasos as $k => $p) {
+        $out[$k] = [
+            (int)round($r + ($p[1] - $r) * $p[0]),
+            (int)round($g + ($p[1] - $g) * $p[0]),
+            (int)round($b + ($p[1] - $b) * $p[0]),
+        ];
+    }
+    return $out;
+}
+
+function css_vars(): string
+{
+    $s = '';
+    foreach (paleta(ajuste('color_principal', '#005A50')) as $k => $c) {
+        $s .= "--brand-$k:{$c[0]} {$c[1]} {$c[2]};";
+    }
+    return '<style>:root{' . $s . '}</style>';
+}
+
+/** URL de una imagen guardada en ajustes (ruta relativa al proyecto). */
+function img_ajuste(string $clave, string $def = ''): string
+{
+    $v = ajuste($clave, $def);
+    if ($v === '') {
+        return '';
+    }
+    $f = ROOT . '/' . ltrim($v, '/');
+    return url($v) . (is_file($f) ? '?v=' . filemtime($f) : '');
+}
+
+function logo_html(string $variante = 'claro', string $cls = 'h-9 w-auto'): string
+{
+    $src = $variante === 'oscuro' ? img_ajuste('logo_oscuro', 'assets/img/logo-blanco.png') : img_ajuste('logo', 'assets/img/logo.png');
+    if ($src === '') {
+        return '<span class="text-lg font-extrabold tracking-tight">' . e(negocio()) . '</span>';
+    }
+    return '<img src="' . e($src) . '" alt="' . e(negocio()) . '" class="' . e($cls) . '">';
+}
+
+function head_identidad(): string
+{
+    $fav = img_ajuste('favicon', 'assets/img/favicon.png');
+    return css_vars()
+        . ($fav ? '<link rel="icon" href="' . e($fav) . '" type="image/png"><link rel="apple-touch-icon" href="' . e(img_ajuste('icono', 'assets/img/icono.png')) . '">' : '')
+        . '<link rel="preload" href="' . url('assets/fonts/montserrat-var.woff2') . '" as="font" type="font/woff2" crossorigin>';
+}

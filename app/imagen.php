@@ -80,3 +80,65 @@ function imagen_borrar(string $archivo): void
     @unlink($base);
     @unlink(preg_replace('/\.jpg$/', '_sm.jpg', $base));
 }
+
+/**
+ * Guarda una imagen del sitio (logo, ícono, logo de marca, portada).
+ * PNG/WEBP conservan transparencia (se guardan PNG); JPG se guarda JPG.
+ * Devuelve la ruta relativa "uploads/sitio/archivo.ext".
+ */
+function imagen_guardar_sitio(array $file, string $prefijo, int $maxAncho, int $maxAlto): string
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_uploaded_file($file['tmp_name'])) {
+        throw new RuntimeException('No se recibió la imagen o es demasiado pesada.');
+    }
+    @ini_set('memory_limit', '256M');
+    $tmp = $file['tmp_name'];
+    $info = @getimagesize($tmp);
+    if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+        throw new RuntimeException('Usa una imagen JPG, PNG o WEBP.');
+    }
+    if ($info[2] === IMAGETYPE_JPEG) {
+        $img = @imagecreatefromjpeg($tmp);
+    } elseif ($info[2] === IMAGETYPE_PNG) {
+        $img = @imagecreatefrompng($tmp);
+    } else {
+        $img = function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($tmp) : false;
+    }
+    if (!$img) {
+        throw new RuntimeException('No se pudo leer la imagen.');
+    }
+    $transparente = $info[2] !== IMAGETYPE_JPEG;
+    $w = imagesx($img);
+    $h = imagesy($img);
+    $s = min(1, $maxAncho / $w, $maxAlto / $h);
+    $nw = max(1, (int)round($w * $s));
+    $nh = max(1, (int)round($h * $s));
+    $out = imagecreatetruecolor($nw, $nh);
+    if ($transparente) {
+        imagealphablending($out, false);
+        imagesavealpha($out, true);
+        imagefill($out, 0, 0, imagecolorallocatealpha($out, 0, 0, 0, 127));
+    }
+    imagecopyresampled($out, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
+
+    $dir = ROOT . '/uploads/sitio';
+    if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
+        throw new RuntimeException('No se pudo crear la carpeta uploads/sitio.');
+    }
+    $nombre = preg_replace('/[^a-z0-9-]/', '', $prefijo) . '-' . bin2hex(random_bytes(4)) . ($transparente ? '.png' : '.jpg');
+    $ok = $transparente ? imagepng($out, $dir . '/' . $nombre, 8) : imagejpeg($out, $dir . '/' . $nombre, 84);
+    imagedestroy($img);
+    imagedestroy($out);
+    if (!$ok) {
+        throw new RuntimeException('No se pudo guardar la imagen.');
+    }
+    return 'uploads/sitio/' . $nombre;
+}
+
+/** Borra una imagen del sitio solo si fue subida (no las de assets/). */
+function imagen_sitio_borrar(?string $ruta): void
+{
+    if ($ruta && strpos($ruta, 'uploads/sitio/') === 0) {
+        @unlink(ROOT . '/' . $ruta);
+    }
+}

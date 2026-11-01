@@ -30,6 +30,15 @@ ini_set('log_errors', '1');
 require_once ROOT . '/app/db.php';
 require_once ROOT . '/app/auth.php';
 require_once ROOT . '/app/vehiculos.php';
+require_once ROOT . '/app/migraciones.php';
+
+if (!empty($GLOBALS['config']['db'])) {
+    try {
+        migrar();
+    } catch (Throwable $e) {
+        error_log('[novelty] migración: ' . $e->getMessage());
+    }
+}
 
 if (session_status() === PHP_SESSION_NONE) {
     $secure = es_https();

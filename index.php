@@ -8,10 +8,17 @@ if (count($destacados) < 3) {
 $recientes = vehiculos_buscar(['orden' => 'recientes'], true, 1, 8);
 $total     = $recientes['total'];
 $marcas    = facetas_marcas();
+$logos     = ajuste('mostrar_marcas', '1') === '1'
+    ? q_all("SELECT m.id, m.nombre, m.logo, COUNT(v.id) AS total FROM marcas m
+        LEFT JOIN vehiculos v ON v.marca_id = m.id AND v.estado IN " . ESTADOS_PUBLICOS . "
+        WHERE m.en_portada = 1 AND m.logo IS NOT NULL AND m.logo <> ''
+        GROUP BY m.id, m.nombre, m.logo, m.orden ORDER BY m.orden, m.nombre")
+    : [];
+$heroImg   = img_ajuste('hero_imagen');
 $anios     = facetas_anios();
 $procs     = facetas_procedencia();
 
-$titulo     = negocio() . ' · ' . ajuste('eslogan', 'Vehículos seminuevos con confianza');
+$titulo     = negocio() . ' · ' . ajuste('eslogan', 'Una nueva experiencia');
 $nav_activo = 'inicio';
 $usa_swiper = true;
 include __DIR__ . '/partials/head.php';
@@ -20,16 +27,16 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
 ?>
 
 <!-- HERO -->
-<section class="relative overflow-hidden bg-ink-950 hero-grid">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 pt-14 pb-20 sm:pt-20 sm:pb-28">
+<section class="relative overflow-hidden bg-brand-950 <?= $heroImg ? 'hero-img' : 'hero-grid' ?>"<?= $heroImg ? ' style="background-image:url(\'' . e($heroImg) . '\')"' : '' ?>>
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 pt-14 pb-20 sm:pt-24 sm:pb-32">
     <div class="max-w-3xl">
-      <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-ink-200">
-        <span class="h-1.5 w-1.5 rounded-full bg-brand-400"></span><?= num($total) ?> vehículos disponibles hoy
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
+        <span class="h-1.5 w-1.5 rounded-full bg-brand-300"></span><?= num($total) ?> vehículos disponibles hoy
       </span>
       <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
-        Tu próximo carro,<br><span class="text-brand-400">sin complicaciones.</span>
+        <?= e(ajuste('hero_titulo', 'Una nueva')) ?><?php if (ajuste('hero_titulo_color')): ?><br><span class="text-brand-300"><?= e(ajuste('hero_titulo_color')) ?></span><?php endif; ?>
       </h1>
-      <p class="mt-5 max-w-xl text-base text-ink-300 sm:text-lg">Seminuevos de agencia y rodados, revisados y con facilidades de pago. Escribe lo que buscas o filtra por marca y año.</p>
+      <?php if (ajuste('hero_subtitulo')): ?><p class="mt-5 max-w-xl text-base text-white/70 sm:text-lg"><?= e(ajuste('hero_subtitulo')) ?></p><?php endif; ?>
     </div>
 
     <form action="<?= url('autos.php') ?>" method="get" class="mt-9 rounded-2xl bg-white p-2 shadow-2xl shadow-black/30 sm:p-2.5">
@@ -57,9 +64,9 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
       </div>
     </form>
     <div class="mt-5 flex flex-wrap items-center gap-2">
-      <span class="text-xs font-semibold uppercase tracking-wider text-ink-400 mr-1">Populares</span>
+      <span class="text-xs font-semibold uppercase tracking-wider text-white/50 mr-1">Populares</span>
       <?php foreach ($atajos as $a): ?>
-        <a href="<?= url('autos.php?q=' . urlencode($a)) ?>" class="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-sm font-medium text-ink-200 hover:border-white/30 hover:text-white transition"><?= e($a) ?></a>
+        <a href="<?= url('autos.php?q=' . urlencode($a)) ?>" class="rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm font-medium text-white/80 hover:border-white/40 hover:text-white transition"><?= e($a) ?></a>
       <?php endforeach; ?>
     </div>
   </div>
@@ -67,7 +74,7 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
 
 <!-- DESTACADOS -->
 <?php if ($destacados): ?>
-<section class="mx-auto max-w-7xl px-4 sm:px-6 pt-16">
+<section class="mx-auto max-w-7xl overflow-hidden px-4 sm:px-6 pt-16 pb-2">
   <div class="flex items-end justify-between gap-4">
     <div>
       <p class="text-xs font-bold uppercase tracking-[.18em] text-brand-600">Selección</p>
@@ -89,15 +96,21 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
 <?php endif; ?>
 
 <!-- MARCAS -->
-<?php if ($marcas): ?>
-<section class="mx-auto max-w-7xl px-4 sm:px-6 pt-16">
-  <h2 class="text-lg font-bold tracking-tight">Explora por marca</h2>
-  <div class="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-1">
-    <?php foreach ($marcas as $m): ?>
-      <a href="<?= url('autos.php?marca=' . (int)$m['id']) ?>" class="group shrink-0 inline-flex items-center gap-2 rounded-xl border border-ink-100 bg-white px-4 py-2.5 text-sm font-semibold text-ink-700 hover:border-ink-300 hover:text-ink-900 transition">
-        <?= e($m['nombre']) ?><span class="rounded-md bg-ink-50 px-1.5 py-0.5 text-xs text-ink-500 group-hover:bg-brand-50 group-hover:text-brand-700"><?= (int)$m['total'] ?></span>
-      </a>
-    <?php endforeach; ?>
+<?php if ($logos): ?>
+<section id="marcas" class="mt-20 scroll-mt-16 bg-brand-950 hero-grid">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"><?= e(ajuste('marcas_titulo', 'Nuestras Marcas')) ?></h2>
+      <?php if (ajuste('marcas_subtitulo')): ?><p class="mt-3 text-white/70"><?= e(ajuste('marcas_subtitulo')) ?></p><?php endif; ?>
+    </div>
+    <div class="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4">
+      <?php foreach ($logos as $m): ?>
+        <a href="<?= url('autos.php?marca=' . (int)$m['id']) ?>" class="group relative flex h-28 items-center justify-center rounded-2xl border border-white/10 bg-white/[.03] px-6 transition hover:border-white/30 hover:bg-white/[.07] sm:h-32" title="<?= e($m['nombre']) ?>">
+          <img src="<?= e(url($m['logo'])) ?>" alt="<?= e($m['nombre']) ?>" loading="lazy" class="max-h-14 max-w-[70%] object-contain opacity-80 transition group-hover:scale-105 group-hover:opacity-100 sm:max-h-16">
+          <?php if ((int)$m['total']): ?><span class="absolute bottom-2.5 text-[11px] font-semibold text-white/0 transition group-hover:text-white/70"><?= (int)$m['total'] ?> disponible<?= (int)$m['total'] === 1 ? '' : 's' ?></span><?php endif; ?>
+        </a>
+      <?php endforeach; ?>
+    </div>
   </div>
 </section>
 <?php endif; ?>
@@ -113,7 +126,9 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
   </div>
   <?php if ($recientes['items']): ?>
   <div class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-    <?php foreach ($recientes['items'] as $v) { include __DIR__ . '/partials/card.php'; } ?>
+    <?php foreach ($recientes['items'] as $i => $v): ?>
+      <div class="<?= $i >= 4 ? 'hidden sm:block' : '' ?>"><?php include __DIR__ . '/partials/card.php'; ?></div>
+    <?php endforeach; ?>
   </div>
   <?php else: ?>
   <div class="mt-7 rounded-2xl border border-dashed border-ink-200 p-12 text-center text-ink-500">Pronto publicaremos vehículos aquí.</div>
@@ -125,40 +140,38 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
   </div>
 </section>
 
-<!-- CONSIGNACIÓN -->
-<section id="consigna" class="mx-auto max-w-7xl px-4 sm:px-6 pt-24 scroll-mt-20">
-  <div class="overflow-hidden rounded-3xl bg-ink-50 ring-1 ring-ink-100">
-    <div class="grid gap-10 p-8 sm:p-12 lg:grid-cols-[1fr_1.3fr] lg:items-center">
-      <div>
-        <p class="text-xs font-bold uppercase tracking-[.18em] text-brand-600">¿Quieres vender?</p>
-        <h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Deja tu carro a consignación</h2>
-        <p class="mt-4 text-ink-600">Nosotros lo fotografiamos, lo publicamos y atendemos a los compradores. Tú solo esperas la venta.</p>
-        <?php if (wa_numero()): ?>
-        <a href="<?= e(wa_link('Hola, quiero dejar mi carro a consignación.')) ?>" target="_blank" rel="noopener" class="mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3.5 font-bold text-white hover:bg-brand-600 transition">
-          <?= icon('message', 'w-5 h-5') ?>Quiero consignar
-        </a>
-        <?php endif; ?>
-      </div>
-      <ol class="grid gap-4 sm:grid-cols-3">
-        <?php
-        $pasos = [
-            ['car', 'Trae tu carro', 'Lo revisamos y acordamos contigo el precio de venta.'],
-            ['camera', 'Fotos y publicación', 'Tomamos entre 20 y 30 fotos y lo publicamos aquí.'],
-            ['handshake', 'Lo vendemos', 'Damos facilidades de pago al comprador y te avisamos.'],
-        ];
-        foreach ($pasos as $i => $p): ?>
-          <li class="rounded-2xl bg-white p-5 ring-1 ring-ink-100">
-            <div class="flex items-center justify-between">
-              <span class="grid h-11 w-11 place-items-center rounded-xl bg-ink-900 text-white"><?= icon($p[0]) ?></span>
-              <span class="text-3xl font-extrabold text-ink-100"><?= $i + 1 ?></span>
-            </div>
-            <h3 class="mt-4 font-bold"><?= e($p[1]) ?></h3>
-            <p class="mt-1 text-sm text-ink-500"><?= e($p[2]) ?></p>
-          </li>
-        <?php endforeach; ?>
-      </ol>
+<!-- SERVICIOS -->
+<section id="servicios" class="mx-auto max-w-7xl scroll-mt-20 px-4 pt-24 sm:px-6">
+  <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-end">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[.18em] text-brand-600">Servicios</p>
+      <h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl"><?= e(ajuste('servicios_titulo', 'Te acompañamos en cada paso')) ?></h2>
+    </div>
+    <div class="flex flex-wrap gap-2 lg:justify-end">
+      <?php if (wa_numero()): ?>
+        <a href="<?= e(wa_link('Hola, quiero vender / consignar mi vehículo.')) ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-white hover:bg-brand-600 transition"><?= icon('message', 'w-4 h-4') ?>Quiero vender mi carro</a>
+      <?php endif; ?>
+      <a href="<?= url('autos.php') ?>" class="inline-flex items-center gap-2 rounded-xl border border-ink-200 px-5 py-3 text-sm font-bold text-ink-800 hover:bg-ink-50 transition">Ver inventario <?= icon('arrow-r', 'w-4 h-4') ?></a>
     </div>
   </div>
+  <ol class="mt-10 grid gap-5 md:grid-cols-3">
+    <?php
+    $iconos = [1 => 'tag', 2 => 'cash', 3 => 'shield'];
+    for ($i = 1; $i <= 3; $i++):
+        $t = ajuste('servicio' . $i . '_titulo');
+        if ($t === '') {
+            continue;
+        } ?>
+      <li class="group relative overflow-hidden rounded-3xl bg-ink-50 p-7 ring-1 ring-ink-100 transition hover:bg-white hover:shadow-soft">
+        <div class="flex items-start justify-between">
+          <span class="text-5xl font-extrabold tracking-tight text-brand-500/90 tabular-nums"><?= sprintf('%02d', $i) ?></span>
+          <span class="grid h-12 w-12 place-items-center rounded-2xl bg-white text-brand-600 ring-1 ring-ink-100 transition group-hover:bg-brand-500 group-hover:text-white"><?= icon($iconos[$i], 'w-6 h-6') ?></span>
+        </div>
+        <h3 class="mt-6 text-xl font-bold"><?= e($t) ?></h3>
+        <p class="mt-2 leading-relaxed text-ink-600"><?= e(ajuste('servicio' . $i . '_texto')) ?></p>
+      </li>
+    <?php endfor; ?>
+  </ol>
 </section>
 
 <?php

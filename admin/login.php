@@ -18,18 +18,16 @@ if (es_post()) {
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Ingresar · <?= e(negocio()) ?></title>
-  <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= asset('assets/css/tw.css') ?>">
   <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
+  <?= head_identidad() ?>
 </head>
-<body class="min-h-screen bg-ink-950 hero-grid font-sans text-ink-900 antialiased">
+<body class="min-h-screen bg-brand-950 hero-grid font-sans text-ink-900 antialiased">
   <div class="flex min-h-screen items-center justify-center px-4">
     <div class="w-full max-w-sm">
       <div class="mb-8 text-center">
-        <span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-white text-2xl font-extrabold text-ink-900">N</span>
-        <h1 class="mt-4 text-2xl font-extrabold text-white"><?= e(negocio()) ?></h1>
-        <p class="text-sm text-ink-400">Panel de administración</p>
+        <div class="flex justify-center"><?= logo_html('oscuro', 'h-8 w-auto') ?></div>
+        <p class="mt-4 text-sm text-white/60">Panel de administración</p>
       </div>
       <form method="post" class="rounded-2xl bg-white p-6 shadow-2xl shadow-black/40">
         <?= csrf_field() ?>
@@ -42,7 +40,7 @@ if (es_post()) {
         </label>
         <button class="mt-6 h-12 w-full rounded-xl bg-brand-500 font-bold text-white hover:bg-brand-600">Ingresar</button>
       </form>
-      <p class="mt-6 text-center text-sm"><a href="<?= url('') ?>" class="text-ink-400 hover:text-white">← Volver al sitio</a></p>
+      <p class="mt-6 text-center text-sm"><a href="<?= url('') ?>" class="text-white/60 hover:text-white">← Volver al sitio</a></p>
     </div>
   </div>
 </body>

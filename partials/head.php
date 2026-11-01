@@ -14,14 +14,11 @@ $og_imagen   = $og_imagen ?? null;
   <meta property="og:description" content="<?= e($descripcion) ?>">
   <?php if ($og_imagen): ?><meta property="og:image" content="<?= e($og_imagen) ?>"><?php endif; ?>
   <meta name="theme-color" content="#0B1220">
-  <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= asset('assets/css/tw.css') ?>">
   <?php if (!empty($usa_swiper)): ?>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <?php endif; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
+  <?= head_identidad() ?>
 </head>
 <body class="<?= e($body_class ?? 'bg-white') ?> font-sans text-ink-900 antialiased">

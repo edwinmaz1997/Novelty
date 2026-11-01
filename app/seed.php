@@ -23,21 +23,22 @@ const SEED_MARCAS = [
     'Land Rover'    => ['Defender', 'Discovery', 'Range Rover', 'Range Rover Sport', 'Range Rover Evoque'],
     'Dodge'         => ['Ram 1500', 'Durango', 'Charger', 'Challenger', 'Journey'],
     'Porsche'       => ['Cayenne', 'Macan', '911', 'Panamera'],
+    'Volvo'         => ['XC40', 'XC60', 'XC90', 'S60', 'S90'],
 ];
 
 const SEED_AJUSTES = [
-    'negocio_nombre' => 'Novelty Autos',
-    'eslogan'        => 'Vehículos seminuevos con confianza',
-    'whatsapp'       => '50200000000',
-    'telefono'       => '+502 0000-0000',
-    'email'          => '',
-    'direccion'      => 'Guatemala',
-    'horario'        => 'Lunes a sábado · 8:00 a 18:00',
+    'negocio_nombre' => 'Novelty Motors',
+    'eslogan'        => 'Una nueva experiencia',
+    'whatsapp'       => '',
+    'telefono'       => '2233-9309',
+    'email'          => 'hola@noveltymotors.com',
+    'direccion'      => 'Plaza Comercial Punto 15, Local 12. Vista Hermosa I, Zona 15',
+    'horario'        => 'Lunes a viernes de 9:00 am a 5:00 pm y sábados de 9:00 am a 12:00 pm',
     'moneda'         => 'Q',
     'comision_pct'   => '5',
-    'facebook'       => '',
-    'instagram'      => '',
-    'tiktok'         => '',
+    'facebook'       => 'https://www.facebook.com/noveltymotorsguatemala',
+    'instagram'      => 'https://www.instagram.com/noveltymotors',
+    'tiktok'         => 'https://www.tiktok.com/@noveltymotors',
 ];
 
 function seed_catalogos(PDO $pdo): void
