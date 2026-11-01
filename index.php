@@ -328,18 +328,18 @@ document.addEventListener('DOMContentLoaded', function () {
   carrusel('.destacados', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
     navigation: { nextEl: '.dest-next', prevEl: '.dest-prev' },
-    speed: 450, autoplay: { delay: 2800, disableOnInteraction: false, pauseOnMouseEnter: true },
+    speed: 450, autoplay: { delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true },
     breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
   carrusel('.ofertas', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
     navigation: { nextEl: '.ofe-next', prevEl: '.ofe-prev' },
-    speed: 450, autoplay: { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }, breakpoints: JSON.parse(JSON.stringify(vehBp))
+    speed: 450, autoplay: { delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true }, breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
   carrusel('.recientes', {
     slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
     navigation: { nextEl: '.rec-next', prevEl: '.rec-prev' },
-    speed: 450, autoplay: { delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }, breakpoints: JSON.parse(JSON.stringify(vehBp))
+    speed: 450, autoplay: { delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true }, breakpoints: JSON.parse(JSON.stringify(vehBp))
   });
 });
 </script>
