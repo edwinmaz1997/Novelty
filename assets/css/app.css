@@ -138,3 +138,6 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
   background: radial-gradient(circle at 50% 55%, rgba(226, 236, 234, .55) 0%, rgba(205, 220, 217, .22) 40%, rgba(200, 215, 212, 0) 72%);
   filter: blur(9px);
 }
+
+.hero-carro { position: absolute; left: 0; z-index: 20; height: auto; pointer-events: none; will-change: transform;
+  filter: drop-shadow(0 14px 10px rgba(0, 0, 0, .45)); }
