@@ -44,9 +44,28 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
       <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80 backdrop-blur">
         <span class="h-1.5 w-1.5 rounded-full bg-brand-300"></span><?= num($total) ?> vehículos disponibles hoy
       </span>
-      <h1 class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-sm sm:text-6xl lg:text-7xl">
-        <?= e(ajuste('hero_titulo', 'Una nueva')) ?><?php if (ajuste('hero_titulo_color')): ?><br><span class="text-brand-300"><?= e(ajuste('hero_titulo_color')) ?></span><?php endif; ?>
+      <?php $l1 = ajuste('hero_titulo', 'Una nueva'); $l2 = ajuste('hero_titulo_color'); ?>
+      <h1 id="hero-titulo" class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-sm sm:text-6xl lg:text-7xl" aria-label="<?= e(trim($l1 . ' ' . $l2)) ?>">
+        <span class="maquina relative inline-block" aria-hidden="true"><span class="maquina-fantasma"><?= e($l1) ?></span><span class="maquina-texto absolute left-0 top-0 whitespace-nowrap" data-texto="<?= e($l1) ?>"></span></span><?php if ($l2): ?><br><span class="maquina relative inline-block text-brand-300" aria-hidden="true"><span class="maquina-fantasma"><?= e($l2) ?></span><span class="maquina-texto absolute left-0 top-0 whitespace-nowrap" data-texto="<?= e($l2) ?>"></span></span><?php endif; ?>
       </h1>
+      <script>
+        (function () {
+          var h = document.getElementById('hero-titulo');
+          if (!h || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          h.classList.add('escribiendo');
+          var lineas = h.querySelectorAll('.maquina-texto'), cursor = document.createElement('span');
+          cursor.className = 'maquina-cursor';
+          var li = 0, ci = 0;
+          function paso() {
+            var el = lineas[li], t = el.getAttribute('data-texto');
+            el.textContent = t.slice(0, ++ci); el.appendChild(cursor);
+            if (ci < t.length) { setTimeout(paso, t[ci - 1] === ' ' ? 120 : 55 + Math.random() * 55); return; }
+            if (++li < lineas.length) { ci = 0; setTimeout(paso, 380); return; }
+            setTimeout(function () { cursor.classList.add('fin'); }, 3200);
+          }
+          setTimeout(paso, 450);
+        })();
+      </script>
       <?php if (ajuste('hero_subtitulo')): ?><p class="mt-5 max-w-md text-base text-white/75 sm:text-lg"><?= e(ajuste('hero_subtitulo')) ?></p><?php endif; ?>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="<?= url('autos.php') ?>" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-brand-950 hover:bg-brand-50 transition">Ver inventario <?= icon('arrow-r', 'w-4 h-4') ?></a>
