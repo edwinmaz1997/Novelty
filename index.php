@@ -10,16 +10,19 @@ $ofertas   = ajuste('mostrar_ofertas', '1') === '1' ? vehiculos_buscar(['oferta'
 $total     = $recientes['total'];
 $marcas    = facetas_marcas();
 $logos     = ajuste('mostrar_marcas', '1') === '1'
-    ? q_all("SELECT m.id, m.nombre, m.logo, COUNT(v.id) AS total FROM marcas m
+    ? q_all("SELECT m.id, m.nombre, m.slug, m.logo, COUNT(v.id) AS total FROM marcas m
         LEFT JOIN vehiculos v ON v.marca_id = m.id AND v.estado IN " . ESTADOS_PUBLICOS . "
         WHERE m.en_portada = 1 AND m.logo IS NOT NULL AND m.logo <> ''
-        GROUP BY m.id, m.nombre, m.logo, m.orden ORDER BY m.orden, m.nombre")
+        GROUP BY m.id, m.nombre, m.slug, m.logo, m.orden ORDER BY m.orden, m.nombre")
     : [];
 $heroImg   = img_ajuste('hero_imagen');
 $anios     = facetas_anios();
 $procs     = facetas_procedencia();
 
-$titulo     = negocio() . ' · ' . ajuste('eslogan', 'Una nueva experiencia');
+$titulo      = negocio() . ' | ' . ajuste('seo_titulo_inicio', 'Autos seminuevos de agencia e importados en Guatemala');
+$descripcion = ajuste('seo_descripcion', negocio() . ': venta, consignación y compra de vehículos seminuevos de agencia e importados en Guatemala. ' . num($total) . ' vehículos disponibles con facilidades de pago.');
+$canonical   = '';
+$jsonld      = [ld_sitio()];
 $nav_activo = 'inicio';
 $usa_swiper = true;
 include __DIR__ . '/partials/head.php';
@@ -49,8 +52,8 @@ if (!$atajos) {
         <span class="h-1.5 w-1.5 rounded-full bg-brand-300"></span><?= num($total) ?> vehículos disponibles hoy
       </span>
       <?php $l1 = ajuste('hero_titulo', 'Una nueva'); $l2 = ajuste('hero_titulo_color'); ?>
-      <h1 id="hero-titulo" class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-sm sm:text-6xl lg:text-7xl" aria-label="<?= e(trim($l1 . ' ' . $l2)) ?>">
-        <span class="maquina relative inline-block" aria-hidden="true"><span class="maquina-fantasma"><?= e($l1) ?></span><span class="maquina-texto absolute left-0 top-0 whitespace-nowrap" data-texto="<?= e($l1) ?>"></span></span><?php if ($l2): ?><br><span class="maquina relative inline-block text-brand-300" aria-hidden="true"><span class="maquina-fantasma"><?= e($l2) ?></span><span class="maquina-texto absolute left-0 top-0 whitespace-nowrap" data-texto="<?= e($l2) ?>"></span></span><?php endif; ?>
+      <h1 id="hero-titulo" class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-sm sm:text-6xl lg:text-7xl" aria-label="<?= e(negocio() . ': ' . trim($l1 . ' ' . $l2)) ?>">
+        <span class="sr-only"><?= e(negocio()) ?>: </span><span class="maquina relative inline-block" aria-hidden="true"><span class="maquina-fantasma"><?= e($l1) ?></span><span class="maquina-texto absolute left-0 top-0 whitespace-nowrap" data-texto="<?= e($l1) ?>"></span></span><?php if ($l2): ?><br><span class="maquina relative inline-block text-brand-300" aria-hidden="true"><span class="maquina-fantasma"><?= e($l2) ?></span><span class="maquina-texto absolute left-0 top-0 whitespace-nowrap" data-texto="<?= e($l2) ?>"></span></span><?php endif; ?>
       </h1>
       <script>
         (function () {
@@ -262,7 +265,7 @@ if (!$atajos) {
         <div class="swiper-wrapper">
           <?php foreach ($logos as $m): ?>
             <div class="swiper-slide">
-              <a href="<?= url('autos.php?marca=' . (int)$m['id']) ?>" class="group relative flex h-28 items-center justify-center rounded-2xl border border-white/10 bg-white/[.03] px-6 transition hover:border-white/30 hover:bg-white/[.07] sm:h-32" title="<?= e($m['nombre']) ?>">
+              <a href="<?= e(marca_url($m['slug'])) ?>" class="group relative flex h-28 items-center justify-center rounded-2xl border border-white/10 bg-white/[.03] px-6 transition hover:border-white/30 hover:bg-white/[.07] sm:h-32" title="<?= e($m['nombre']) ?>">
                 <img src="<?= e(url($m['logo'])) ?>" alt="<?= e($m['nombre']) ?>" loading="lazy" class="max-h-14 max-w-[70%] object-contain opacity-80 transition group-hover:scale-105 group-hover:opacity-100 sm:max-h-16">
                 <?php if ((int)$m['total']): ?><span class="absolute bottom-2.5 text-[11px] font-semibold text-white/0 transition group-hover:text-white/70"><?= (int)$m['total'] ?> disponible<?= (int)$m['total'] === 1 ? '' : 's' ?></span><?php endif; ?>
               </a>
@@ -322,7 +325,7 @@ if (!$atajos) {
         <h2 class="mt-1.5 text-2xl font-extrabold tracking-tight sm:text-3xl"><?= e(ajuste('ofertas_titulo', 'Ofertas')) ?></h2>
       </div>
       <div class="flex items-center gap-2">
-        <a href="<?= url('autos.php?oferta=1&orden=descuento') ?>" class="mr-2 hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 hover:text-red-800">Ver todas (<?= (int)$ofertas['total'] ?>) <?= icon('arrow-r', 'w-4 h-4') ?></a>
+        <a href="<?= url('ofertas.php') ?>" class="mr-2 hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 hover:text-red-800">Ver todas (<?= (int)$ofertas['total'] ?>) <?= icon('arrow-r', 'w-4 h-4') ?></a>
         <?php if (count($ofertas['items']) > 1): ?>
         <button class="ofe-prev grid h-11 w-11 place-items-center rounded-full border border-red-200 bg-white text-ink-700 hover:bg-red-50" aria-label="Anterior"><?= icon('chev-l') ?></button>
         <button class="ofe-next grid h-11 w-11 place-items-center rounded-full border border-red-200 bg-white text-ink-700 hover:bg-red-50" aria-label="Siguiente"><?= icon('chev-r') ?></button>
@@ -336,7 +339,7 @@ if (!$atajos) {
         <?php endforeach; ?>
       </div>
     </div>
-    <a href="<?= url('autos.php?oferta=1&orden=descuento') ?>" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 sm:hidden">Ver todas las ofertas (<?= (int)$ofertas['total'] ?>) <?= icon('arrow-r', 'w-4 h-4') ?></a>
+    <a href="<?= url('ofertas.php') ?>" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-red-700 sm:hidden">Ver todas las ofertas (<?= (int)$ofertas['total'] ?>) <?= icon('arrow-r', 'w-4 h-4') ?></a>
   </div>
 </section>
 <?php endif; ?>

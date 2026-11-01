@@ -4,10 +4,10 @@ $hayOfertas = (int)q_val('SELECT COUNT(*) FROM vehiculos v WHERE v.estado IN ' .
 $links = [
     'inicio'    => ['Inicio', url(''), 'home'],
     'vehiculos' => ['Vehículos', url('autos.php'), 'car'],
-    'ofertas'   => ['Ofertas', url('autos.php?oferta=1&orden=descuento'), 'tag'],
-    'servicios' => ['Servicios', url('#servicios'), 'handshake'],
-    'marcas'    => ['Marcas', url('#marcas'), 'star'],
-    'contacto'  => ['Contacto', url('#contacto'), 'phone'],
+    'ofertas'   => ['Ofertas', url('ofertas.php'), 'tag'],
+    'servicios' => ['Servicios', url('servicios.php'), 'handshake'],
+    'marcas'    => ['Marcas', url('marcas.php'), 'star'],
+    'contacto'  => ['Contacto', url('contacto.php'), 'phone'],
 ];
 if (!$hayOfertas) {
     unset($links['ofertas']);

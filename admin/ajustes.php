@@ -43,6 +43,11 @@ $secciones = [
         'mostrar_ofertas' => ['Mostrar el carrusel de ofertas en el inicio', 'check', ''],
         'ofertas_titulo'  => ['Título de la sección', 'text', ''],
     ]],
+    'seo' => ['Google (SEO)', 'Cómo aparece el sitio en Google y al compartirlo en WhatsApp o redes.', [
+        'seo_titulo_inicio'   => ['Título en Google (después del nombre)', 'text', 'Ej. "Autos seminuevos de agencia e importados en Guatemala". Se muestra como: ' . negocio() . ' | …'],
+        'seo_descripcion'     => ['Descripción en Google', 'textarea', 'Texto bajo el título en los resultados (máx. ~155 caracteres). Si lo dejas vacío se genera solo.'],
+        'google_verificacion' => ['Código de verificación de Google Search Console', 'text', 'Solo el valor de content="…" de la etiqueta meta que te da Search Console.'],
+    ]],
     'negocio' => ['Ventas', '', [
         'moneda'       => ['Símbolo de moneda', 'text', 'Ej. Q o $'],
         'comision_pct' => ['Comisión de referencia (%)', 'number', 'Solo informativa en el formulario de vehículos.'],
@@ -92,6 +97,12 @@ if (es_post()) {
                 $val = p($k) === '1' ? '1' : '0';
             } elseif ($tipo === 'color') {
                 $val = preg_match('/^#[0-9a-fA-F]{6}$/', p($k)) ? strtoupper(p($k)) : ($actual[$k] ?? '#005A50');
+            } elseif ($k === 'google_verificacion') {
+                $val = p($k);
+                if (preg_match('/content=["\']([^"\']+)/', $val, $mm)) {
+                    $val = $mm[1];
+                }
+                $val = preg_replace('/[^A-Za-z0-9_\-]/', '', $val);
             } elseif ($k === 'whatsapp') {
                 $val = preg_replace('/\D/', '', p($k));
             } else {

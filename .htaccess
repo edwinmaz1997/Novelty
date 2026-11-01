@@ -1,5 +1,6 @@
 Options -Indexes -MultiViews
 DirectoryIndex index.php
+ErrorDocument 404 /404.php
 
 AddType image/x-icon .ico
 AddType application/manifest+json .webmanifest
@@ -26,6 +27,11 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^(favicon\.ico|favicon-32\.png|apple-touch-icon\.png|apple-touch-icon-precomposed\.png|icon-192\.png|icon-512\.png)$ uploads/sitio/iconos/$1 [L]
   RewriteRule ^apple-touch-icon-precomposed\.png$ apple-touch-icon.png [L]
   RewriteRule ^manifest\.webmanifest$ manifest.php [L]
+
+  # SEO: robots, mapa del sitio y páginas de marca
+  RewriteRule ^robots\.txt$ robots.php [L]
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^autos/marca/([a-z0-9-]+)/?$ autos.php?marca_slug=$1 [L,QSA]
 
   # 2) Ficha de vehículo: /auto/12-toyota-hilux-2021
   RewriteRule ^auto/([0-9]+)(-[a-z0-9-]*)?/?$ auto.php?id=$1 [L,QSA]

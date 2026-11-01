@@ -6,7 +6,8 @@ $v  = $id ? vehiculo($id, true) : null;
 
 if (!$v) {
     http_response_code(404);
-    $titulo = 'Vehículo no disponible · ' . negocio();
+    $titulo = 'Vehículo no disponible';
+    $noindex = true;
     include __DIR__ . '/partials/head.php';
     include __DIR__ . '/partials/header.php';
     ?>
@@ -31,9 +32,15 @@ $similares = q_all(VEH_SELECT . ' WHERE v.estado IN ' . ESTADOS_PUBLICOS . ' AND
     ORDER BY (v.marca_id = ?) DESC, ABS(' . PRECIO_SQL . ' - ?) ASC LIMIT 4', [$id, $v['marca_id'], (string)$v['carroceria'], $v['marca_id'], precio_actual($v)]);
 
 $nombre    = vehiculo_titulo($v);
-$titulo    = $nombre . ' ' . $v['anio'] . ' · ' . money(precio_actual($v)) . (tiene_oferta($v) ? ' (oferta)' : '') . ' · ' . negocio();
+$titulo    = $nombre . ' ' . ($v['version'] ? $v['version'] . ' ' : '') . $v['anio'] . ' en venta · ' . money(precio_actual($v)) . (tiene_oferta($v) ? ' (oferta)' : '');
 $descripcion = $nombre . ' ' . ($v['version'] ?: '') . ' ' . $v['anio'] . ', ' . km($v['kilometraje']) . ', ' . (PROCEDENCIAS[$v['procedencia']] ?? '') . '. ' . money(precio_actual($v)) . (tiene_oferta($v) ? ' (antes ' . money($v['precio_publicado']) . ')' : '') . '.';
 $og_imagen = $fotos ? abs_url('uploads/vehiculos/' . $fotos[0]['archivo']) : null;
+$og_tipo   = 'product';
+$canonical = 'auto/' . $v['id'] . '-' . slugify($v['marca'] . ' ' . $v['modelo'] . ' ' . $v['anio']);
+$jsonld    = [
+    ld_vehiculo($v, $fotos),
+    ld_migas([['Inicio', abs_url('')], ['Vehículos', abs_url('autos.php')], [$v['marca'], abs_url('autos/marca/' . $v['marca_slug'] . '/')], [$nombre . ' ' . $v['anio'], abs_url($canonical)]]),
+];
 $nav_activo = 'vehiculos';
 $usa_swiper = true;
 $ocultar_wa_flotante = true;
@@ -64,7 +71,7 @@ $msg = vehiculo_wa_mensaje($v);
   <nav class="flex flex-wrap items-center gap-1 text-xs font-medium text-ink-400">
     <a href="<?= url('') ?>" class="hover:text-ink-700">Inicio</a><span>/</span>
     <a href="<?= url('autos.php') ?>" class="hover:text-ink-700">Vehículos</a><span>/</span>
-    <a href="<?= url('autos.php?marca=' . (int)$v['marca_id']) ?>" class="hover:text-ink-700"><?= e($v['marca']) ?></a><span>/</span>
+    <a href="<?= e(marca_url($v['marca_slug'])) ?>" class="hover:text-ink-700"><?= e($v['marca']) ?></a><span>/</span>
     <span class="text-ink-600"><?= e($v['modelo'] . ' ' . $v['anio']) ?></span>
   </nav>
 

@@ -5,8 +5,8 @@ $redes = array_filter([
     'TikTok'    => ajuste('tiktok'),
 ]);
 ?>
-<footer id="contacto" class="mt-24 bg-brand-950 text-brand-100/80">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 py-14 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+<footer class="mt-24 bg-brand-950 text-brand-100/80">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 py-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_.8fr_1fr_1fr]">
     <div>
       <?= logo_html('oscuro', 'h-7 w-auto') ?>
       <p class="mt-5 max-w-sm text-sm leading-relaxed text-brand-100/60"><?= e(ajuste('marcas_subtitulo', 'Venta, consignación y compra de vehículos semi-nuevos de agencia e importados.')) ?></p>
@@ -18,6 +18,16 @@ $redes = array_filter([
       </div>
       <?php endif; ?>
     </div>
+    <nav aria-label="Secciones">
+      <h4 class="text-xs font-semibold uppercase tracking-[.16em] text-brand-200/50">Explorar</h4>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        <li><a href="<?= url('autos.php') ?>" class="hover:text-white">Vehículos</a></li>
+        <li><a href="<?= url('ofertas.php') ?>" class="hover:text-white">Ofertas</a></li>
+        <li><a href="<?= url('marcas.php') ?>" class="hover:text-white">Marcas</a></li>
+        <li><a href="<?= url('servicios.php') ?>" class="hover:text-white">Servicios</a></li>
+        <li><a href="<?= url('contacto.php') ?>" class="hover:text-white">Contacto</a></li>
+      </ul>
+    </nav>
     <div>
       <h4 class="text-xs font-semibold uppercase tracking-[.16em] text-brand-200/50">Contacto</h4>
       <ul class="mt-4 space-y-3 text-sm">

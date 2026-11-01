@@ -40,7 +40,8 @@
   function cargar(reiniciar) {
     if (reiniciar) pagina = 1;
     var p = parametros();
-    var url = window.location.pathname + (p.toString() ? '?' + p.toString() : '');
+    var base = C.pagina || window.location.pathname;
+    var url = base + (p.toString() ? '?' + p.toString() : '');
     history.replaceState(null, '', url);
     p.set('page', pagina);
     if (ctrl) ctrl.abort();

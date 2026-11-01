@@ -1,5 +1,18 @@
 <?php
-require __DIR__ . '/app/bootstrap.php';
+require_once __DIR__ . '/app/bootstrap.php';
+
+// Página de marca con URL limpia: /autos/marca/toyota/
+$marcaPagina = null;
+if (!empty($_GET['marca_slug']) && is_string($_GET['marca_slug'])) {
+    $marcaPagina = q_one('SELECT id, nombre, slug FROM marcas WHERE slug = ?', [$_GET['marca_slug']]);
+    if (!$marcaPagina) {
+        http_response_code(404);
+        require __DIR__ . '/404.php';
+        exit;
+    }
+    $_GET['marca'] = (string)$marcaPagina['id'];
+}
+$esOfertas = defined('PAGINA_OFERTAS');
 
 $f       = vehiculos_filtros($_GET);
 $res     = vehiculos_buscar($f, true, 1, 12);
@@ -9,7 +22,34 @@ $anios   = facetas_anios();
 $procs   = facetas_procedencia();
 $kms     = [10000, 25000, 50000, 75000, 100000, 150000, 200000];
 
-$titulo     = ($f['oferta'] ? 'Ofertas' : 'Vehículos disponibles') . ' · ' . negocio();
+// SEO según el tipo de listado
+$filtrosExtra = $f['q'] !== '' || $f['modelo'] || $f['anio_min'] || $f['anio_max'] || $f['km_min'] || $f['km_max']
+    || $f['precio_min'] || $f['precio_max'] || $f['procedencia'] !== '' || (!$marcaPagina && $f['marca']) || (!$esOfertas && $f['oferta']);
+if ($marcaPagina) {
+    $h1 = $marcaPagina['nombre'] . ' seminuevos';
+    $titulo = $marcaPagina['nombre'] . ' seminuevos en venta en Guatemala';
+    $descripcion = 'Compra tu ' . $marcaPagina['nombre'] . ' seminuevo en ' . negocio() . ': ' . $res['total'] . ' vehículos de agencia e importados con facilidades de pago en Guatemala.';
+    $canonical = 'autos/marca/' . $marcaPagina['slug'] . '/';
+    $miga = $marcaPagina['nombre'];
+} elseif ($esOfertas) {
+    $h1 = ajuste('ofertas_titulo', 'Ofertas');
+    $titulo = 'Ofertas en vehículos seminuevos en Guatemala';
+    $descripcion = 'Vehículos seminuevos con precio de oferta en ' . negocio() . '. Aprovecha los descuentos en autos de agencia e importados en Guatemala.';
+    $canonical = 'ofertas.php';
+    $miga = $h1;
+} else {
+    $h1 = 'Vehículos disponibles';
+    $titulo = 'Vehículos seminuevos en venta en Guatemala';
+    $descripcion = 'Inventario de ' . negocio() . ': ' . $res['total'] . ' vehículos seminuevos de agencia e importados. Filtra por marca, modelo, año, kilometraje y precio.';
+    $canonical = 'autos.php';
+    $miga = 'Vehículos';
+}
+$noindex = $filtrosExtra;
+$migas = [['Inicio', abs_url('')], ['Vehículos', abs_url('autos.php')]];
+if ($marcaPagina || $esOfertas) {
+    $migas[] = [$miga, abs_url($canonical)];
+}
+$jsonld = [ld_migas($migas)];
 $nav_activo = $f['oferta'] ? 'ofertas' : 'vehiculos';
 $body_class = 'bg-ink-50/60';
 include __DIR__ . '/partials/head.php';
@@ -23,8 +63,11 @@ $campo = 'h-11 w-full rounded-xl border-ink-200 bg-white text-sm font-medium tex
 
 <section class="border-b border-ink-100 bg-white">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 py-8">
-    <nav class="text-xs font-medium text-ink-400"><a href="<?= url('') ?>" class="hover:text-ink-700">Inicio</a> <span class="mx-1">/</span> Vehículos</nav>
-    <h1 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Vehículos disponibles</h1>
+    <nav class="text-xs font-medium text-ink-400" aria-label="Migas de pan">
+      <a href="<?= url('') ?>" class="hover:text-ink-700">Inicio</a> <span class="mx-1">/</span>
+      <?php if ($marcaPagina || $esOfertas): ?><a href="<?= url('autos.php') ?>" class="hover:text-ink-700">Vehículos</a> <span class="mx-1">/</span> <?= e($miga) ?><?php else: ?>Vehículos<?php endif; ?>
+    </nav>
+    <h1 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl"><?= e($h1) ?></h1>
     <p class="mt-1 text-ink-500"><span id="total-top" class="font-semibold text-ink-800"><?= num($res['total']) ?></span> resultados</p>
   </div>
 </section>

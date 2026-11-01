@@ -3,7 +3,7 @@
  * Migraciones de base de datos. Se ejecutan solas al cargar cualquier página
  * cuando la versión guardada en ajustes.db_version es menor a DB_VERSION.
  */
-const DB_VERSION = 7;
+const DB_VERSION = 8;
 
 const AJUSTES_V2 = [
     'color_principal'   => '#005A50',
@@ -55,6 +55,12 @@ function migrar(): void
     $pdo = db();
     if ($v < 2) {
         migrar_v2($pdo);
+    }
+    if ($v < 8) {
+        $ins = $pdo->prepare('INSERT IGNORE INTO ajustes (clave, valor) VALUES (?, ?)');
+        $ins->execute(['seo_titulo_inicio', 'Autos seminuevos de agencia e importados en Guatemala']);
+        $ins->execute(['seo_descripcion', '']);
+        $ins->execute(['google_verificacion', '']);
     }
     if ($v < 7) {
         q("INSERT IGNORE INTO ajustes (clave, valor) VALUES ('hero_carro', 'assets/img/carro.png')");
