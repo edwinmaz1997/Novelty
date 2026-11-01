@@ -330,3 +330,25 @@ function head_identidad(): string
         . ($fav ? '<link rel="icon" href="' . e($fav) . '" type="image/png"><link rel="apple-touch-icon" href="' . e(img_ajuste('icono', 'assets/img/icono.png')) . '">' : '')
         . '<link rel="preload" href="' . url('assets/fonts/montserrat-var.woff2') . '" as="font" type="font/woff2" crossorigin>';
 }
+
+/* ---------- Mapas (Google Maps / Waze) ---------- */
+function mapa_destino(): string
+{
+    $c = preg_replace('/\s+/', '', ajuste('mapa_coords'));
+    return preg_match('/^-?\d{1,2}(\.\d+)?,-?\d{1,3}(\.\d+)?$/', $c) ? $c : '';
+}
+
+function mapa_google(): string
+{
+    $c = mapa_destino();
+    $q = $c !== '' ? $c : trim(negocio() . ', ' . ajuste('direccion') . ', Guatemala');
+    return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($q);
+}
+
+function mapa_waze(): string
+{
+    $c = mapa_destino();
+    return $c !== ''
+        ? 'https://waze.com/ul?ll=' . rawurlencode($c) . '&navigate=yes'
+        : 'https://waze.com/ul?q=' . rawurlencode(ajuste('direccion') . ', Guatemala') . '&navigate=yes';
+}

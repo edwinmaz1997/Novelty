@@ -100,3 +100,18 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
 @media (prefers-reduced-motion: reduce) { .menu-movil, .menu-movil .menu-item { transition: none !important; } }
 .wa-flotante { transition: opacity .25s, transform .25s; }
 .menu-abierto .wa-flotante { opacity: 0; transform: scale(.8); pointer-events: none; }
+
+/* Hoja de mapas */
+.hoja-mapa { visibility: hidden; transition: visibility 0s .35s; }
+.hoja-mapa .hoja-velo { opacity: 0; transition: opacity .3s; }
+.hoja-mapa .hoja-panel { transform: translate3d(0, 100%, 0); transition: transform .35s cubic-bezier(.7,0,.3,1); }
+.hoja-mapa .hoja-opcion { opacity: 0; transform: translate3d(0, 10px, 0); transition: opacity .2s, transform .2s; }
+.hoja-mapa.abierta { visibility: visible; transition: visibility 0s; }
+.hoja-mapa.abierta .hoja-velo { opacity: 1; }
+.hoja-mapa.abierta .hoja-panel { transform: none; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.hoja-mapa.abierta .hoja-opcion { opacity: 1; transform: none; transition: opacity .4s .15s, transform .4s .15s; }
+.hoja-mapa.abierta .hoja-opcion + .hoja-opcion { transition-delay: .22s; }
+@media (min-width: 640px) {
+  .hoja-mapa .hoja-panel { transform: translate3d(0, -40%, 0) scale(.96); opacity: 0; transition: transform .3s, opacity .2s; }
+  .hoja-mapa.abierta .hoja-panel { transform: translate3d(0, -50%, 0); opacity: 1; transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .3s; }
+}

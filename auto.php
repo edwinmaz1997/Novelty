@@ -166,7 +166,7 @@ $msg = vehiculo_wa_mensaje($v);
         <ul class="grid gap-3 rounded-2xl bg-ink-50 p-5 text-sm text-ink-600 ring-1 ring-ink-100">
           <li class="flex gap-3"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-ink-700"><?= icon('cash', 'w-4 h-4') ?></span><span><b class="text-ink-900">Facilidades de pago.</b> Te ayudamos con el financiamiento.</span></li>
           <li class="flex gap-3"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-ink-700"><?= icon('handshake', 'w-4 h-4') ?></span><span><b class="text-ink-900">Recibimos tu carro.</b> Pregunta por consignación.</span></li>
-          <?php if (ajuste('direccion')): ?><li class="flex gap-3"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-ink-700"><?= icon('pin', 'w-4 h-4') ?></span><span><b class="text-ink-900">Visítanos.</b> <?= e(ajuste('direccion')) ?></span></li><?php endif; ?>
+          <?php if (ajuste('direccion')): ?><li class="flex gap-3"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-ink-700"><?= icon('pin', 'w-4 h-4') ?></span><button type="button" data-abrir-mapa class="text-left"><b class="text-ink-900">Visítanos.</b> <span class="underline decoration-ink-300 underline-offset-4 hover:decoration-ink-700"><?= e(ajuste('direccion')) ?></span> <span class="whitespace-nowrap font-semibold text-brand-600">· Cómo llegar</span></button></li><?php endif; ?>
         </ul>
       </div>
     </aside>

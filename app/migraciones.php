@@ -3,7 +3,7 @@
  * Migraciones de base de datos. Se ejecutan solas al cargar cualquier página
  * cuando la versión guardada en ajustes.db_version es menor a DB_VERSION.
  */
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 const AJUSTES_V2 = [
     'color_principal'   => '#005A50',
@@ -55,6 +55,9 @@ function migrar(): void
     $pdo = db();
     if ($v < 2) {
         migrar_v2($pdo);
+    }
+    if ($v < 4) {
+        q("INSERT IGNORE INTO ajustes (clave, valor) VALUES ('mapa_coords', '')");
     }
     if ($v < 3) {
         // Imagen principal de la portada

@@ -51,6 +51,9 @@ $links = [
         <?php if (ajuste('telefono')): ?>
           <a href="<?= e(tel_link()) ?>" class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-ink-200 font-bold text-ink-800"><?= icon('phone', 'w-5 h-5') ?>Llamar · <?= e(ajuste('telefono')) ?></a>
         <?php endif; ?>
+        <?php if (ajuste('direccion')): ?>
+          <button type="button" data-abrir-mapa class="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-ink-200 font-bold text-ink-800"><?= icon('pin', 'w-5 h-5') ?>Cómo llegar</button>
+        <?php endif; ?>
         <?php if (ajuste('horario')): ?><p class="mt-2 px-4 text-center text-xs leading-relaxed text-ink-400"><?= e(ajuste('horario')) ?></p><?php endif; ?>
       </div>
     </nav>

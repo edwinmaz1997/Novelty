@@ -46,7 +46,8 @@ $secciones = [
         'whatsapp'  => ['WhatsApp (con código de país)', 'text', 'Ej. 50255555555 — recibe los mensajes de "Me interesa".'],
         'telefono'  => ['Teléfono visible', 'text', ''],
         'email'     => ['Correo', 'email', ''],
-        'direccion' => ['Dirección', 'text', ''],
+        'direccion' => ['Dirección', 'text', 'Al tocarla en el sitio se ofrece abrirla en Google Maps o Waze.'],
+        'mapa_coords' => ['Ubicación exacta (opcional)', 'text', 'Latitud,longitud para llegar exacto. En Google Maps: clic derecho sobre el local → copia los números. Ej. 14.5935,-90.4844'],
         'horario'   => ['Horario', 'text', ''],
     ]],
     'redes' => ['Redes sociales', '', [
