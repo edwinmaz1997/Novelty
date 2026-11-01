@@ -29,18 +29,17 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
 <!-- HERO -->
 <section id="hero" class="relative isolate overflow-hidden bg-brand-950 <?= $heroImg ? '' : 'hero-grid' ?>">
   <?php if ($heroImg): ?>
-  <div class="hero-media pointer-events-none absolute inset-0 -z-10 overflow-hidden lg:left-[28%]" aria-hidden="true">
+  <div class="hero-media pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block lg:left-[28%]" aria-hidden="true">
     <div class="hero-parallax absolute inset-0">
       <img src="<?= e($heroImg) ?>" alt="" class="hero-kenburns h-full w-full object-cover object-[62%_center]" fetchpriority="high">
     </div>
-    <div class="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-950/55 to-brand-950 lg:hidden"></div>
     <div class="absolute inset-0 hidden bg-gradient-to-r from-brand-950 via-brand-950/40 to-transparent lg:block"></div>
     <div class="absolute inset-x-0 bottom-0 hidden h-48 bg-gradient-to-t from-brand-950 to-transparent lg:block"></div>
     <div class="absolute inset-x-0 top-0 hidden h-24 bg-gradient-to-b from-brand-950/70 to-transparent lg:block"></div>
   </div>
   <div class="hero-brillo pointer-events-none absolute -left-40 top-1/3 -z-10 h-[30rem] w-[30rem] rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
   <?php endif; ?>
-  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-20 sm:pt-28 sm:pb-28 lg:pt-36 lg:pb-32">
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 pt-12 pb-16 sm:pt-20 sm:pb-24 lg:pt-36 lg:pb-32">
     <div class="max-w-xl hero-entrada">
       <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80 backdrop-blur">
         <span class="h-1.5 w-1.5 rounded-full bg-brand-300"></span><?= num($total) ?> vehículos disponibles hoy
@@ -54,9 +53,18 @@ $atajos = ['Pick-up', 'SUV', '4x4', 'Automático', 'Diésel', 'Único dueño'];
         <a href="#servicios" class="inline-flex items-center gap-2 rounded-xl border border-white/25 px-6 py-3.5 text-sm font-bold text-white backdrop-blur hover:border-white/60 transition">Vende tu carro</a>
       </div>
     </div>
+    <?php if ($heroImg): ?>
+    <div class="relative -mx-4 mt-8 aspect-[16/11] overflow-hidden sm:-mx-6 sm:aspect-[16/9] lg:hidden" aria-hidden="true">
+      <img src="<?= e($heroImg) ?>" alt="" class="hero-kenburns h-full w-full object-cover object-[55%_center]">
+      <div class="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-brand-950 to-transparent"></div>
+      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-brand-950 to-transparent"></div>
+    </div>
+    <div class="hidden lg:block lg:h-24"></div>
+    <?php else: ?>
     <div class="h-10 lg:h-24"></div>
+    <?php endif; ?>
 
-    <form action="<?= url('autos.php') ?>" method="get" class="hero-entrada hero-entrada-2 rounded-2xl bg-white p-2 shadow-2xl shadow-black/30 sm:p-2.5">
+    <form action="<?= url('autos.php') ?>" method="get" class="hero-entrada hero-entrada-2 relative <?= $heroImg ? '-mt-6 lg:mt-0' : '' ?> rounded-2xl bg-white p-2 shadow-2xl shadow-black/30 sm:p-2.5">
       <div class="grid gap-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr_auto]">
         <label class="relative flex items-center">
           <span class="pointer-events-none absolute left-4 text-ink-400"><?= icon('search') ?></span>
