@@ -11,6 +11,7 @@
   --brand-500: 0 90 80; --brand-600: 0 77 68; --brand-700: 0 63 56; --brand-800: 0 50 44; --brand-900: 0 36 32; --brand-950: 0 25 22;
 }
 html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+body { overflow-anchor: none; } /* evita saltos cuando carruseles/imágenes cambian de alto al cargar */
 body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 [x-cloak], [hidden] { display: none !important; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
