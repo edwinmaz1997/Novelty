@@ -218,4 +218,4 @@ if ($tab === 'ventas') {
       y1: { beginAtZero: true, position: "right", grid: { display: false }, ticks: { precision: 0 } } } }
 });</script>';
 }
-admin_fin($tab === 'ventas' ? ['https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js'] : [], $inline);
+admin_fin($tab === 'ventas' ? [asset('assets/vendor/chart.umd.min.js')] : [], $inline);

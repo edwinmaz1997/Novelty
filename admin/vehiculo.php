@@ -368,7 +368,7 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
 
 <?php
 admin_fin(
-    ['https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js', asset('assets/js/admin.js')],
+    [asset('assets/vendor/Sortable.min.js'), asset('assets/js/admin.js')],
     '<script>window.PANEL = ' . json_encode([
         'ajax'       => url('admin/ajax.php'),
         'vehiculoId' => $v ? (int)$id : null,

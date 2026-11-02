@@ -140,4 +140,4 @@ new Chart(document.getElementById("grafica"), {
 });
 </script>';
 }
-admin_fin($admin ? ['https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js'] : [], $inline);
+admin_fin($admin ? [asset('assets/vendor/chart.umd.min.js')] : [], $inline);

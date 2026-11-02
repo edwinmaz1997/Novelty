@@ -236,6 +236,6 @@ $msg = vehiculo_wa_mensaje($v);
 <?php endif; ?>
 
 <?php
-$scripts = ['https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', asset('assets/js/detalle.js')];
+$scripts = [asset('assets/vendor/swiper-bundle.min.js'), asset('assets/js/detalle.js')];
 $script_config = '<script>window.VEHICULO = ' . json_encode(['titulo' => $nombre . ' ' . $v['anio'], 'url' => abs_url('auto/' . $v['id'])]) . ';</script>';
 include __DIR__ . '/partials/footer.php';

@@ -154,3 +154,32 @@ body { overflow-x: clip; font-feature-settings: "ss01", "cv11"; text-rendering: 
 .rev-ceja.rev-visible { opacity: 1; transform: none; letter-spacing: .18em !important; }
 .rev-sub { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity .7s ease .25s, transform .8s cubic-bezier(.2,.8,.2,1) .25s; }
 .rev-sub.rev-visible { opacity: 1; transform: none; }
+
+/* Antes de que Swiper arranque, las tarjetas ya tienen su ancho final (evita el salto/destello al recargar) */
+.swiper:not(.swiper-initialized) .swiper-wrapper { display: flex; gap: 16px; overflow: hidden; }
+.swiper:not(.swiper-initialized) .swiper-slide { flex: 0 0 calc((100% - 16px) / 1.12); }
+.marcas.swiper:not(.swiper-initialized) .swiper-wrapper { gap: 12px; }
+.marcas.swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 24px) / 2.2); }
+@media (min-width: 640px) {
+  .swiper:not(.swiper-initialized) .swiper-wrapper { gap: 20px; }
+  .swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 20px) / 2); }
+  .marcas.swiper:not(.swiper-initialized) .swiper-wrapper { gap: 16px; }
+  .marcas.swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 32px) / 3); }
+}
+@media (min-width: 1024px) {
+  .swiper:not(.swiper-initialized) .swiper-wrapper { gap: 24px; }
+  .swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 48px) / 3); }
+  .marcas.swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 64px) / 5); }
+}
+@media (min-width: 1280px) {
+  .swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 72px) / 4); }
+  .marcas.swiper:not(.swiper-initialized) .swiper-slide { flex-basis: calc((100% - 80px) / 6); }
+}
+/* Galería de la ficha: una foto a la vez antes de iniciar */
+.galeria.swiper:not(.swiper-initialized) .swiper-wrapper { gap: 0; }
+.galeria.swiper:not(.swiper-initialized) .swiper-slide { flex-basis: 100%; }
+.thumbs.swiper:not(.swiper-initialized) .swiper-wrapper { gap: 8px; }
+.thumbs.swiper:not(.swiper-initialized) .swiper-slide { flex: 0 0 auto; }
+.visor.swiper:not(.swiper-initialized) .swiper-slide { flex-basis: 100%; }
+
+html { background: #fff; }

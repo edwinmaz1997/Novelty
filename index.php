@@ -23,6 +23,7 @@ $titulo      = negocio() . ' | ' . ajuste('seo_titulo_inicio', 'Autos seminuevos
 $descripcion = ajuste('seo_descripcion', negocio() . ': venta, consignación y compra de vehículos seminuevos de agencia e importados en Guatemala. ' . num($total) . ' vehículos disponibles con facilidades de pago.');
 $canonical   = '';
 $jsonld      = [ld_sitio()];
+$precargar_imagen = $heroImg ?: null;
 $nav_activo = 'inicio';
 $usa_swiper = true;
 include __DIR__ . '/partials/head.php';
@@ -379,7 +380,7 @@ if (!$atajos) {
 </section>
 
 <?php
-$scripts = ['https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js'];
+$scripts = [asset('assets/vendor/swiper-bundle.min.js')];
 $script_inline = <<<HTML
 <script>
 document.addEventListener('DOMContentLoaded', function () {

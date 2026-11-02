@@ -52,14 +52,17 @@ $jsonld      = $jsonld ?? [];
   <meta name="twitter:title" content="<?= e($titulo) ?>">
   <meta name="twitter:description" content="<?= e($descripcion) ?>">
   <meta name="twitter:image" content="<?= e($og_imagen) ?>">
+  <meta name="color-scheme" content="light">
+  <?php if (!empty($precargar_imagen)): ?><link rel="preload" as="image" href="<?= e($precargar_imagen) ?>" fetchpriority="high"><?php endif; ?>
   <meta name="theme-color" content="<?= e(ajuste('color_principal', '#005A50')) ?>">
   <?php if (ajuste('google_verificacion')): ?><meta name="google-site-verification" content="<?= e(ajuste('google_verificacion')) ?>"><?php endif; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/tw.css') ?>">
   <?php if (!empty($usa_swiper)): ?>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <link rel="stylesheet" href="<?= asset('assets/vendor/swiper-bundle.min.css') ?>">
   <?php endif; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
   <?= head_identidad() ?>
+  <style>/* Transición suave entre páginas del sitio en lugar del parpadeo blanco */@view-transition{navigation:auto}::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}</style>
   <?= jsonld(ld_negocio()) ?>
   <?php foreach ($jsonld as $bloque): ?><?= jsonld($bloque) ?><?php endforeach; ?>
 </head>
