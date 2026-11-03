@@ -268,6 +268,10 @@ function vehiculo_texto_busqueda(array $v): string
             $partes[] = $sin[$v[$k]];
         }
     }
+    // Sinónimos de tracción aunque el nombre se haya personalizado (4WD, AWD, 4x4…)
+    if (!empty($v['traccion']) && preg_match('/4x4|4wd|awd|integral|doble/i', $v['traccion'])) {
+        $partes[] = '4x4 4wd doble traccion';
+    }
     $partes = array_filter($partes, function ($x) {
         return $x !== null && $x !== '';
     });
@@ -432,4 +436,22 @@ function etiqueta_uso(string $t): int
         }
     }
     return $n;
+}
+
+/* ---------- Opciones administrables (tracción, …) ---------- */
+const TIPOS_OPCION = [
+    'traccion' => ['titulo' => 'Tracciones', 'singular' => 'tracción', 'columna' => 'traccion', 'ejemplo' => 'Ej. 4x4, AWD, 4x2, RWD', 'icono' => 'wheel'],
+];
+
+function opciones(string $tipo): array
+{
+    static $cache = [];
+    if (!isset($cache[$tipo])) {
+        try {
+            $cache[$tipo] = array_column(q_all('SELECT nombre FROM opciones WHERE tipo = ? ORDER BY orden, nombre', [$tipo]), 'nombre');
+        } catch (Throwable $e) {
+            $cache[$tipo] = $tipo === 'traccion' ? TRACCIONES : [];
+        }
+    }
+    return $cache[$tipo];
 }

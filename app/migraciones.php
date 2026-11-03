@@ -3,7 +3,7 @@
  * Migraciones de base de datos. Se ejecutan solas al cargar cualquier página
  * cuando la versión guardada en ajustes.db_version es menor a DB_VERSION.
  */
-const DB_VERSION = 8;
+const DB_VERSION = 9;
 
 const AJUSTES_V2 = [
     'color_principal'   => '#005A50',
@@ -55,6 +55,23 @@ function migrar(): void
     $pdo = db();
     if ($v < 2) {
         migrar_v2($pdo);
+    }
+    if ($v < 9) {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS opciones (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            tipo VARCHAR(30) NOT NULL,
+            nombre VARCHAR(40) NOT NULL,
+            orden INT NOT NULL DEFAULT 0,
+            UNIQUE KEY uq_opcion (tipo, nombre)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $pdo->exec('ALTER TABLE vehiculos MODIFY traccion VARCHAR(40) NULL');
+        $ins = $pdo->prepare("INSERT IGNORE INTO opciones (tipo, nombre, orden) VALUES ('traccion', ?, ?)");
+        foreach (TRACCIONES as $i => $t) {
+            $ins->execute([$t, $i + 1]);
+        }
+        foreach (q_all("SELECT DISTINCT traccion FROM vehiculos WHERE traccion IS NOT NULL AND traccion <> ''") as $r) {
+            $ins->execute([$r['traccion'], 100]);
+        }
     }
     if ($v < 8) {
         $ins = $pdo->prepare('INSERT IGNORE INTO ajustes (clave, valor) VALUES (?, ?)');

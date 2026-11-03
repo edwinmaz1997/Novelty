@@ -13,6 +13,7 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
             ['nuevo', 'Ingresar vehículo', 'admin/vehiculo.php', true],
             ['catalogos', 'Marcas y modelos', 'admin/catalogos.php', $admin],
             ['etiquetas', 'Etiquetas', 'admin/etiquetas.php', $admin],
+            ['op-traccion', 'Tracciones', 'admin/opciones.php?tipo=traccion', $admin],
         ]],
         ['clientes', 'Clientes', 'users', 'admin/clientes.php', $admin],
         ['reportes', 'Reportes', 'chart', 'admin/reportes.php', $admin],

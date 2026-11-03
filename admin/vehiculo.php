@@ -43,7 +43,7 @@ if (es_post()) {
         'combustible'      => isset(COMBUSTIBLES[p('combustible')]) ? p('combustible') : null,
         'motor'            => mb_substr(p('motor'), 0, 30),
         'carroceria'       => in_array(p('carroceria'), CARROCERIAS, true) ? p('carroceria') : null,
-        'traccion'         => in_array(p('traccion'), TRACCIONES, true) ? p('traccion') : null,
+        'traccion'         => in_array(p('traccion'), opciones('traccion'), true) ? p('traccion') : null,
         'puertas'          => $n('puertas') !== null ? (int)p('puertas') : null,
         'pasajeros'        => $n('pasajeros') !== null ? (int)p('pasajeros') : null,
         'descripcion'      => p('descripcion'),
@@ -207,8 +207,8 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
         <label class="<?= C_LABEL ?>">Carrocería
           <select name="carroceria" class="select <?= C_INPUT ?>"><option value="">—</option><?php foreach (CARROCERIAS as $c): ?><option<?= $sel($c, $d['carroceria']) ?>><?= $c ?></option><?php endforeach; ?></select>
         </label>
-        <label class="<?= C_LABEL ?>">Tracción
-          <select name="traccion" class="select <?= C_INPUT ?>"><option value="">—</option><?php foreach (TRACCIONES as $c): ?><option<?= $sel($c, $d['traccion']) ?>><?= $c ?></option><?php endforeach; ?></select>
+        <label class="<?= C_LABEL ?>"><span class="flex items-center justify-between">Tracción<?php if ($admin): ?><a href="<?= url('admin/opciones.php?tipo=traccion') ?>" class="text-xs font-semibold text-brand-600 hover:underline">Administrar</a><?php endif; ?></span>
+          <select name="traccion" class="select <?= C_INPUT ?>"><option value="">—</option><?php $trs = opciones('traccion'); if ($d['traccion'] && !in_array($d['traccion'], $trs, true)) { $trs[] = $d['traccion']; } foreach ($trs as $c): ?><option<?= $sel($c, $d['traccion']) ?>><?= e($c) ?></option><?php endforeach; ?></select>
         </label>
         <label class="<?= C_LABEL ?>">Motor
           <input name="motor" value="<?= e($d['motor']) ?>" placeholder="Ej. 2.4L Turbo" class="<?= C_INPUT ?>">
