@@ -207,8 +207,11 @@ admin_inicio($titulo, $v ? 'vehiculos' : 'nuevo', ['acciones' => $acc]);
         <label class="<?= C_LABEL ?>">Carrocería
           <select name="carroceria" class="select <?= C_INPUT ?>"><option value="">—</option><?php foreach (CARROCERIAS as $c): ?><option<?= $sel($c, $d['carroceria']) ?>><?= $c ?></option><?php endforeach; ?></select>
         </label>
-        <label class="<?= C_LABEL ?>"><span class="flex items-center justify-between">Tracción<?php if ($admin): ?><a href="<?= url('admin/opciones.php?tipo=traccion') ?>" class="text-xs font-semibold text-brand-600 hover:underline">Administrar</a><?php endif; ?></span>
-          <select name="traccion" class="select <?= C_INPUT ?>"><option value="">—</option><?php $trs = opciones('traccion'); if ($d['traccion'] && !in_array($d['traccion'], $trs, true)) { $trs[] = $d['traccion']; } foreach ($trs as $c): ?><option<?= $sel($c, $d['traccion']) ?>><?= e($c) ?></option><?php endforeach; ?></select>
+        <label class="<?= C_LABEL ?>">Tracción
+          <div class="flex gap-1.5">
+            <select name="traccion" id="traccion" class="select <?= C_INPUT ?>"><option value="">—</option><?php $trs = opciones('traccion'); if ($d['traccion'] && !in_array($d['traccion'], $trs, true)) { $trs[] = $d['traccion']; } foreach ($trs as $c): ?><option<?= $sel($c, $d['traccion']) ?>><?= e($c) ?></option><?php endforeach; ?></select>
+            <button type="button" id="nueva-traccion" class="mt-1.5 grid w-11 shrink-0 place-items-center rounded-xl border border-ink-200 text-ink-500 hover:bg-ink-50" title="Agregar tracción"><?= icon('plus', 'w-4 h-4') ?></button>
+          </div>
         </label>
         <label class="<?= C_LABEL ?>">Motor
           <input name="motor" value="<?= e($d['motor']) ?>" placeholder="Ej. 2.4L Turbo" class="<?= C_INPUT ?>">

@@ -66,6 +66,18 @@
         .catch(function (e) { aviso(e.message, true); });
     });
 
+    var nt = document.getElementById('nueva-traccion');
+    if (nt) nt.addEventListener('click', function () {
+      var n = prompt('Nueva tracción (ej. 4x4, AWD, RWD):');
+      if (!n || !n.trim()) return;
+      post('crear_opcion', { tipo: 'traccion', nombre: n.trim() }).then(function (d) {
+        var s = document.getElementById('traccion');
+        var o = Array.prototype.find.call(s.options, function (x) { return x.value.toLowerCase() === d.nombre.toLowerCase(); });
+        if (!o) { o = new Option(d.nombre, d.nombre); s.add(o); }
+        s.value = o.value;
+      }).catch(function (e) { aviso(e.message, true); });
+    });
+
     var nc = document.getElementById('nuevo-cliente');
     if (nc) nc.addEventListener('click', function () {
       var n = prompt('Nombre completo del cliente:');

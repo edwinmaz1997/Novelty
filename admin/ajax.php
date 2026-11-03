@@ -47,6 +47,22 @@ try {
             json_out(['ok' => true, 'id' => $id, 'nombre' => $nombre]);
             break;
 
+        case 'crear_opcion':
+            $tipo = p('tipo');
+            if (!isset(TIPOS_OPCION[$tipo])) {
+                throw new RuntimeException('Tipo no válido.');
+            }
+            $nombre = mb_substr(trim(preg_replace('/\s+/', ' ', p('nombre'))), 0, 40);
+            if ($nombre === '') {
+                throw new RuntimeException('Escribe el nombre.');
+            }
+            $existe = q_val('SELECT nombre FROM opciones WHERE tipo = ? AND nombre = ?', [$tipo, $nombre]);
+            if (!$existe) {
+                q('INSERT INTO opciones (tipo, nombre, orden) VALUES (?, ?, 100)', [$tipo, $nombre]);
+            }
+            json_out(['ok' => true, 'nombre' => $existe ?: $nombre]);
+            break;
+
         case 'crear_cliente':
             if ($u['rol'] !== 'admin') {
                 throw new RuntimeException('Sin permiso.');
