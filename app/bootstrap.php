@@ -54,3 +54,15 @@ if (session_status() === PHP_SESSION_NONE) {
     ]);
     session_start();
 }
+
+/* En las páginas HTML se quitan los comentarios <!-- --> antes de enviarlas al navegador */
+if (PHP_SAPI !== 'cli' && !defined('SIN_LIMPIEZA_HTML')) {
+    ob_start(function ($html) {
+        foreach (headers_list() as $h) {
+            if (stripos($h, 'content-type:') === 0 && stripos($h, 'text/html') === false) {
+                return $html;
+            }
+        }
+        return preg_replace('/<!--(?!\[if).*?-->/s', '', $html);
+    });
+}
