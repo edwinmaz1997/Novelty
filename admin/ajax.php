@@ -64,7 +64,7 @@ try {
             break;
 
         case 'crear_cliente':
-            if ($u['rol'] !== 'admin') {
+            if (!es_admin()) {
                 throw new RuntimeException('Sin permiso.');
             }
             $nombre = mb_substr(p('nombre'), 0, 150);
@@ -81,7 +81,7 @@ try {
             if (!$v) {
                 throw new RuntimeException('Vehículo no encontrado.');
             }
-            if ($v['estado'] === 'vendido' && $u['rol'] !== 'admin') {
+            if ($v['estado'] === 'vendido' && !es_admin()) {
                 throw new RuntimeException('El vehículo ya fue vendido.');
             }
             if ((int)q_val('SELECT COUNT(*) FROM vehiculo_fotos WHERE vehiculo_id = ?', [$vid]) >= MAX_FOTOS) {

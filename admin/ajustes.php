@@ -2,7 +2,7 @@
 require dirname(__DIR__) . '/app/bootstrap.php';
 require_once ROOT . '/app/imagen.php';
 require __DIR__ . '/_layout.php';
-requiere_admin();
+requiere_superadmin();
 
 /*
  * Tipos: text, email, url, number, textarea, color, check,

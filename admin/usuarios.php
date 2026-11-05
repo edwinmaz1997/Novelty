@@ -1,7 +1,7 @@
 <?php
 require dirname(__DIR__) . '/app/bootstrap.php';
 require __DIR__ . '/_layout.php';
-$yo = requiere_admin();
+$yo = requiere_superadmin();
 
 $editId = gi('id');
 $edit = $editId ? q_one('SELECT * FROM usuarios WHERE id = ?', [$editId]) : null;
@@ -80,11 +80,11 @@ admin_inicio('Usuarios', 'usuarios');
         <div class="mt-1.5 space-y-2">
           <label class="flex cursor-pointer gap-3 rounded-xl p-3 ring-1 ring-ink-200 has-[:checked]:bg-ink-50 has-[:checked]:ring-ink-900">
             <input type="radio" name="rol" value="admin" <?= $d['rol'] === 'admin' ? 'checked' : '' ?> class="mt-0.5 text-ink-900 focus:ring-ink-900">
-            <span class="text-sm"><b>Administrador</b><br><span class="text-ink-500">Ve todo: costos, ganancias, clientes, reportes y usuarios.</span></span>
+            <span class="text-sm"><b>Administrador</b><br><span class="text-ink-500">Acceso total, incluidos Ajustes del sitio y Usuarios.</span></span>
           </label>
           <label class="flex cursor-pointer gap-3 rounded-xl p-3 ring-1 ring-ink-200 has-[:checked]:bg-ink-50 has-[:checked]:ring-ink-900">
             <input type="radio" name="rol" value="test" <?= $d['rol'] === 'test' ? 'checked' : '' ?> class="mt-0.5 text-ink-900 focus:ring-ink-900">
-            <span class="text-sm"><b>Test</b><br><span class="text-ink-500">Solo ingresa y edita vehículos con sus fotos para mostrarlos. No ve costos ni ganancias.</span></span>
+            <span class="text-sm"><b>Test</b><br><span class="text-ink-500">Todo lo del negocio (vehículos, costos, ganancias, ventas, clientes, reportes y catálogos), excepto Ajustes del sitio y Usuarios.</span></span>
           </label>
         </div>
       </div>

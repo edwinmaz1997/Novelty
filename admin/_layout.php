@@ -5,6 +5,7 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
 {
     $u = usuario();
     $admin = es_admin();
+    $super = es_superadmin();
     // [clave, texto, ícono, url, visible, hijos]
     $menu = [
         ['dashboard', 'Inicio', 'home', 'admin/', true],
@@ -17,8 +18,8 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
         ]],
         ['clientes', 'Clientes', 'users', 'admin/clientes.php', $admin],
         ['reportes', 'Reportes', 'chart', 'admin/reportes.php', $admin],
-        ['usuarios', 'Usuarios', 'key', 'admin/usuarios.php', $admin],
-        ['ajustes', 'Ajustes', 'settings', 'admin/ajustes.php', $admin],
+        ['usuarios', 'Usuarios', 'key', 'admin/usuarios.php', $super],
+        ['ajustes', 'Ajustes', 'settings', 'admin/ajustes.php', $super],
     ];
     ?><!doctype html>
 <html lang="es">
@@ -72,7 +73,7 @@ function admin_inicio(string $titulo, string $activo = '', array $opc = []): voi
       <span class="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-sm font-bold text-white"><?= e(mb_strtoupper(mb_substr($u['nombre'], 0, 1))) ?></span>
       <div class="min-w-0 flex-1">
         <p class="truncate text-sm font-semibold text-white"><?= e($u['nombre']) ?></p>
-        <p class="text-xs text-brand-200/50"><?= $admin ? 'Administrador' : 'Test · carga de vehículos' ?></p>
+        <p class="text-xs text-brand-200/50"><?= $super ? 'Administrador' : 'Test' ?></p>
       </div>
       <a href="<?= url('admin/logout.php') ?>" class="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/10 hover:text-white" title="Salir"><?= icon('logout', 'w-4 h-4') ?></a>
     </div>

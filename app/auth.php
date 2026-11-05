@@ -15,7 +15,15 @@ function usuario(): ?array
     return $u;
 }
 
+/** Gestión completa del negocio (vehículos, costos, clientes, ventas, reportes, catálogos): admin y test. */
 function es_admin(): bool
+{
+    $u = usuario();
+    return $u !== null && in_array($u['rol'], ['admin', 'test'], true);
+}
+
+/** Solo el administrador principal: Ajustes del sitio y Usuarios. */
+function es_superadmin(): bool
 {
     $u = usuario();
     return $u !== null && $u['rol'] === 'admin';
@@ -33,7 +41,17 @@ function requiere_login(): array
 function requiere_admin(): array
 {
     $u = requiere_login();
-    if ($u['rol'] !== 'admin') {
+    if (!es_admin()) {
+        flash('error', 'Tu usuario no tiene acceso a esa sección.');
+        redirect('admin/');
+    }
+    return $u;
+}
+
+function requiere_superadmin(): array
+{
+    $u = requiere_login();
+    if (!es_superadmin()) {
         flash('error', 'Tu usuario no tiene acceso a esa sección.');
         redirect('admin/');
     }
